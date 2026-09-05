@@ -1,0 +1,103 @@
+{
+  "_source": "synthesized from @solarisdk/core@0.1.2 type definitions and docs.getsolari.com error shapes, 2026-09-03. Not yet captured from live traffic.",
+
+  "createSandbox": {
+    "sandboxId": "sbx_fixture000000001",
+    "kind": "sandbox",
+    "controlUrl": "wss://api.getsolari.com/control/sbx_fixture000000001",
+    "expiresAt": "2026-09-03T12:30:00.000Z"
+  },
+
+  "sandboxView": {
+    "sandboxId": "sbx_fixture000000001",
+    "kind": "sandbox",
+    "state": "running",
+    "metadata": { "blink_gate": "g1", "blink_run": "fixture" },
+    "expiresAt": "2026-09-03T12:30:00.000Z",
+    "cpu": 1,
+    "memMb": 2048
+  },
+
+  "listSandboxes": {
+    "sandboxes": [],
+    "nextCursor": null
+  },
+
+  "previewUrl": {
+    "url": "https://sbx-fixture000000001-3000.preview.getsolari.com/?pt_token=REDACTED_IN_FIXTURES",
+    "token": "REDACTED_IN_FIXTURES"
+  },
+
+  "createSnapshot": {
+    "snapshotId": "snap_fixture00000001",
+    "parent": null,
+    "sizeBytes": 1073741824,
+    "createdAt": "2026-09-03T12:05:00.000Z"
+  },
+
+  "listSnapshots": {
+    "snapshots": [
+      {
+        "id": "snap_fixture00000001",
+        "parent": null,
+        "name": "gitea-1.27.3-fixture",
+        "sizeBytes": 1073741824,
+        "createdAt": "2026-09-03T12:05:00.000Z",
+        "kind": "sandbox",
+        "template": "base"
+      }
+    ]
+  },
+
+  "setTimeout": { "expiresAt": "2026-09-03T12:33:00.000Z" },
+
+  "metrics": {
+    "cpuPct": 3.2,
+    "memBytes": 268435456,
+    "memTotalBytes": 2147483648,
+    "diskBytes": 1610612736
+  },
+
+  "errors": {
+    "concurrency429": {
+      "status": 429,
+      "body": {
+        "code": "ConcurrencyLimitExceeded",
+        "error": "organization is at its concurrent session cap",
+        "retryable": false
+      },
+      "_note": "docs.getsolari.com/errors: 'Retrying cannot help: a slot only frees when you pause or kill a session.' The SDK transport also excludes 429 from its retry path."
+    },
+    "noCapacity503": {
+      "status": 503,
+      "body": {
+        "code": "NoCapacity",
+        "error": "no host currently available to serve the request",
+        "retryable": true
+      },
+      "_note": "Retryable per docs. This is the one the SDK WOULD retry five times by default, which is what the counting fetch caps."
+    },
+    "insufficientCredit402": {
+      "status": 402,
+      "body": {
+        "code": "InsufficientCredit",
+        "error": "prepaid balance exhausted",
+        "retryable": false
+      },
+      "_note": "docs.getsolari.com/errors, documented for the VM gateway. Whether the sandbox gateway returns the same shape is UNVERIFIED."
+    },
+    "featureRequiresPlan402": {
+      "status": 402,
+      "body": { "code": "FeatureRequiresPlan", "error": "plan does not allow this", "retryable": false }
+    },
+    "snapshotHasChildren409": {
+      "status": 409,
+      "body": { "code": "SnapshotHasChildren", "error": "a running or paused machine depends on this snapshot", "retryable": false },
+      "_note": "Blocks D9 share-snapshot expiry deletion while a fork is live. Re-queue, never retry in place."
+    },
+    "auth401": {
+      "status": 401,
+      "body": { "code": "Unauthorized", "error": "api key missing, malformed, or rejected", "retryable": false }
+    }
+  }
+}
