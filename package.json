@@ -1,0 +1,46 @@
+{
+  "name": "blink",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pick an open source app, tap Launch, get your own seeded disposable instance in about a second.",
+  "engines": {
+    "node": ">=23.6"
+  },
+  "scripts": {
+    "gates": "node scripts/gates/run-all.ts",
+    "gate:g1": "node scripts/gates/g1-fork-to-healthy.ts",
+    "gate:g2": "node scripts/gates/g2-preview-framing.ts",
+    "gate:g3": "node scripts/gates/g3-pause-resume.ts",
+    "gate:g4": "node scripts/gates/g4-snapshot-limits.ts",
+    "gate:g5": "node scripts/gates/g5-relay.ts",
+    "gate:g6": "node scripts/gates/g6-egress.ts",
+    "gate:g7": "node scripts/gates/g7-concurrency.ts",
+    "gate:g8": "node scripts/gates/g8-origin-check.ts",
+    "soak": "TZ=UTC node scripts/soak/run.ts",
+    "lint:dashes": "node scripts/lint-dashes.ts",
+    "web": "TZ=UTC node src/web/server.ts",
+    "sweep": "node scripts/gates/sweep.ts",
+    "test": "TZ=UTC BLINK_INSTANCE_LOG=\"${TMPDIR:-/tmp}/blink-test-instances.jsonl\" node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "rederive": "node scripts/gates/rederive.ts",
+    "snapshot:gitea": "node scripts/snapshots/gitea.ts",
+    "snapshot:jaeger": "node scripts/snapshots/jaeger.ts",
+    "snapshot:metabase": "node scripts/snapshots/metabase.ts",
+    "snapshot:excalidraw": "node scripts/snapshots/excalidraw.ts",
+    "snapshot:uptime-kuma": "node scripts/snapshots/uptime-kuma.ts",
+    "check:excalidraw-assets": "node scripts/analysis/excalidraw-assets.ts",
+    "watchdog": "TZ=UTC node scripts/watchdog.ts",
+    "recover": "TZ=UTC node scripts/recover.ts"
+  },
+  "dependencies": {
+    "@solarisdk/browser": "0.1.3",
+    "@solarisdk/sandbox": "0.1.2",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.23.1",
+    "typescript": "^5.6.0"
+  }
+}

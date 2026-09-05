@@ -1,0 +1,12 @@
+# Secrets. This file exists BEFORE the first commit on purpose: a secret
+# committed once stays in history after it is deleted, and the only clean fix
+# then is rewriting history and rotating the credential.
+.env
+.env.*
+!.env.example
+
+node_modules/
+
+# Local run state and measurement scratch.
+.playwright-mcp/
+*.log
