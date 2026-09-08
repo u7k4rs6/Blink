@@ -1,0 +1,8 @@
+{
+  "_comment": "Copy to snapshots.json and fill in real snapshot ids after the day-2 snapshot build. The gates never build snapshots themselves; they fork from these.",
+  "gitea": "snap_replace_with_real_id",
+  "jaeger": "snap_replace_with_real_id",
+  "excalidraw": "snap_replace_with_real_id",
+  "uptimekuma": "snap_replace_with_real_id",
+  "metabase": "snap_replace_with_real_id"
+}
