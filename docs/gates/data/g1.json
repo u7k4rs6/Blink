@@ -1,0 +1,2355 @@
+{
+  "runId": "g1-2026-09-03T16-12-13-256Z",
+  "plan": "starter",
+  "verdict": "KEEP THE WARM POOL. Cold p95 17871 ms exceeds warm p50 6860 ms by 11011 ms, more than the 500 ms threshold, so the warm pool buys real time.",
+  "inconclusive": false,
+  "observations": 40,
+  "minObservations": 20,
+  "estimate": {
+    "sandboxSeconds": 1800,
+    "browserSeconds": 0,
+    "usd": 0.0285
+  },
+  "actual": {
+    "sandboxSeconds": 580.3,
+    "browserSeconds": 0,
+    "usd": 0.00919
+  },
+  "costBasis": {
+    "measuredUsd": 0.00919,
+    "modelledUsd": 0,
+    "measuredFraction": 1,
+    "rows": [
+      {
+        "kind": "sandbox",
+        "seconds": 6.2853435929999995,
+        "usd": 0.00009951794022249998,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 50.540813441,
+        "usd": 0.0008002295461491666,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 4.635996323999993,
+        "usd": 0.00007340327512999988,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 28.994322194999985,
+        "usd": 0.00045907676808749974,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 3.0179667229999905,
+        "usd": 0.00004778447311416652,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 32.724523385000005,
+        "usd": 0.0005181382869291668,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 3.5882684420000004,
+        "usd": 0.00005681425033166667,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 21.695667352999997,
+        "usd": 0.00034351473308916663,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 3.246391013000015,
+        "usd": 0.0000514011910391669,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 22.270936187000014,
+        "usd": 0.0003526231562941669,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 2.7953665780000154,
+        "usd": 0.00004425997081833358,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 24.44674828100001,
+        "usd": 0.0003870735144491668,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 3.575008369999996,
+        "usd": 0.0000566042991916666,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 19.727276259999954,
+        "usd": 0.0003123485407833326,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 2.6765259770000123,
+        "usd": 0.00004237832796916686,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 22.21753781999997,
+        "usd": 0.0003517776821499995,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 2.891116145000036,
+        "usd": 0.00004577600562916724,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 21.922335664999963,
+        "usd": 0.00034710364802916605,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 2.914790116999997,
+        "usd": 0.000046150843519166615,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 21.91550163200003,
+        "usd": 0.0003469954425066671,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 2.8656289850000176,
+        "usd": 0.000045372458929166945,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 21.132334455999953,
+        "usd": 0.0003345952955533326,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 5.164124066999997,
+        "usd": 0.00008176529772749995,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 21.880771179000032,
+        "usd": 0.0003464455436675005,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 3.822639864999917,
+        "usd": 0.00006052513119583202,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 26.42801918799989,
+        "usd": 0.0004184436371433316,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 2.715436736000003,
+        "usd": 0.000042994414986666716,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 20.551545395000023,
+        "usd": 0.000325399468754167,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 2.848890810000012,
+        "usd": 0.000045107437825000186,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 22.081918726000005,
+        "usd": 0.0003496303798283334,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 4.15849443099997,
+        "usd": 0.00006584282849083286,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 23.281792750000022,
+        "usd": 0.0003686283852083337,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 4.20288644199993,
+        "usd": 0.00006654570199833223,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 24.430827334000032,
+        "usd": 0.00038682143278833385,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 4.439806717999978,
+        "usd": 0.00007029693970166631,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 26.415820771,
+        "usd": 0.0004182504955408333,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 10.367727623999933,
+        "usd": 0.00016415568737999892,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 23.516513196000016,
+        "usd": 0.00037234479227000024,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 3.6457936080000364,
+        "usd": 0.00005772506546000057,
+        "measured": true,
+        "note": "gitea cold fork, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 24.27278004099999,
+        "usd": 0.00038431901731583317,
+        "measured": true,
+        "note": "gitea warm fork, observed lifetime"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 11878
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1860
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 410
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 303
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 14120
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 7285
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 15551
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 11471
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1535
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 668
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10714
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1727
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 413
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 374
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9336
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1484
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11743
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 8319
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1502
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 288
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9508
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1158
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 315
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 280
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9206
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 3773
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 15098
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3471
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1449
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 264
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9733
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1313
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 340
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 309
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9310
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1361
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12497
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3291
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1146
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 321
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9321
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1309
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 292
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 307
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9155
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1103
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11503
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 4104
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1405
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 316
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9899
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 835
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 249
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 376
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9025
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1524
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12869
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3284
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1309
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 268
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9292
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1547
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 384
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 275
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9429
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1138
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11645
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3090
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 957
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 273
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9128
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1104
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 249
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 248
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9553
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1372
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12408
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3222
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1267
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 255
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9171
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1110
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 291
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 250
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9374
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1173
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11743
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3266
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1154
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 288
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9443
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1078
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 350
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 253
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9240
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1114
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12106
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3748
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1555
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 307
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9294
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 932
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 273
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 287
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10272
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1181
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11857
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3222
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1344
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 299
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9166
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1395
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 299
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 265
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9276
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1203
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11955
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3439
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1428
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 287
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9207
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1348
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 401
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 526
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9183
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 3669
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11191
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3306
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 3169
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 534
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10617
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 876
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 305
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 267
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9674
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1069
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11984
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3175
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1148
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 251
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9258
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1125
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 250
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 262
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9151
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1165
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 13655
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3028
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1040
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 250
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9145
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1334
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 253
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 245
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9464
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1138
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 13437
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3288
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1235
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 249
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10293
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1229
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 257
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 312
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9409
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1231
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 13630
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3277
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1874
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 282
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10376
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1583
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 353
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 458
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9465
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 4671
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 13652
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3512
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1402
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 301
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 8951
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 6367
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1326
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 1228
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10211
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 3409
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12000
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3260
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1207
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 258
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9254
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1416
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 396
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 299
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10068
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1901
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12406
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3203
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1393
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 499
+    }
+  ],
+  "data": {
+    "samples": [
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 0,
+        "totalMs": 17871,
+        "forkMs": 11893,
+        "previewResolveMs": 411,
+        "previewFirstByteMs": 3706,
+        "healthCompleteMs": 1861,
+        "apiMs": 11882,
+        "healthMs": 1861,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 0,
+        "totalMs": 20256,
+        "forkMs": 15792,
+        "previewResolveMs": 1535,
+        "previewFirstByteMs": 2606,
+        "healthCompleteMs": 322,
+        "apiMs": 15792,
+        "healthMs": 322,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 1,
+        "totalMs": 14953,
+        "forkMs": 10721,
+        "previewResolveMs": 413,
+        "previewFirstByteMs": 2091,
+        "healthCompleteMs": 1728,
+        "apiMs": 10714,
+        "healthMs": 1728,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 1,
+        "totalMs": 13435,
+        "forkMs": 10044,
+        "previewResolveMs": 1503,
+        "previewFirstByteMs": 1511,
+        "healthCompleteMs": 378,
+        "apiMs": 10044,
+        "healthMs": 378,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 2,
+        "totalMs": 12247,
+        "forkMs": 9515,
+        "previewResolveMs": 315,
+        "previewFirstByteMs": 1259,
+        "healthCompleteMs": 1158,
+        "apiMs": 9508,
+        "healthMs": 1158,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 2,
+        "totalMs": 7160,
+        "forkMs": 3944,
+        "previewResolveMs": 1449,
+        "previewFirstByteMs": 1354,
+        "healthCompleteMs": 412,
+        "apiMs": 3944,
+        "healthMs": 412,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 3,
+        "totalMs": 12989,
+        "forkMs": 9740,
+        "previewResolveMs": 340,
+        "previewFirstByteMs": 1595,
+        "healthCompleteMs": 1314,
+        "apiMs": 9733,
+        "healthMs": 1314,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 3,
+        "totalMs": 6371,
+        "forkMs": 3574,
+        "previewResolveMs": 1146,
+        "previewFirstByteMs": 1313,
+        "healthCompleteMs": 337,
+        "apiMs": 3574,
+        "healthMs": 337,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 4,
+        "totalMs": 12263,
+        "forkMs": 9329,
+        "previewResolveMs": 293,
+        "previewFirstByteMs": 1331,
+        "healthCompleteMs": 1310,
+        "apiMs": 9322,
+        "healthMs": 1310,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 4,
+        "totalMs": 8507,
+        "forkMs": 5283,
+        "previewResolveMs": 1405,
+        "previewFirstByteMs": 1440,
+        "healthCompleteMs": 379,
+        "apiMs": 5283,
+        "healthMs": 379,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 5,
+        "totalMs": 12319,
+        "forkMs": 9905,
+        "previewResolveMs": 250,
+        "previewFirstByteMs": 1329,
+        "healthCompleteMs": 835,
+        "apiMs": 9899,
+        "healthMs": 835,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 5,
+        "totalMs": 6782,
+        "forkMs": 3576,
+        "previewResolveMs": 1309,
+        "previewFirstByteMs": 1475,
+        "healthCompleteMs": 421,
+        "apiMs": 3576,
+        "healthMs": 421,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 6,
+        "totalMs": 12568,
+        "forkMs": 9299,
+        "previewResolveMs": 385,
+        "previewFirstByteMs": 1337,
+        "healthCompleteMs": 1548,
+        "apiMs": 9292,
+        "healthMs": 1548,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 6,
+        "totalMs": 5767,
+        "forkMs": 3346,
+        "previewResolveMs": 958,
+        "previewFirstByteMs": 1207,
+        "healthCompleteMs": 256,
+        "apiMs": 3346,
+        "healthMs": 256,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 7,
+        "totalMs": 11559,
+        "forkMs": 9135,
+        "previewResolveMs": 250,
+        "previewFirstByteMs": 1070,
+        "healthCompleteMs": 1104,
+        "apiMs": 9128,
+        "healthMs": 1104,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 7,
+        "totalMs": 6305,
+        "forkMs": 3584,
+        "previewResolveMs": 1267,
+        "previewFirstByteMs": 1191,
+        "healthCompleteMs": 263,
+        "apiMs": 3584,
+        "healthMs": 263,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 8,
+        "totalMs": 11817,
+        "forkMs": 9179,
+        "previewResolveMs": 291,
+        "previewFirstByteMs": 1236,
+        "healthCompleteMs": 1111,
+        "apiMs": 9172,
+        "healthMs": 1111,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 8,
+        "totalMs": 6357,
+        "forkMs": 3522,
+        "previewResolveMs": 1154,
+        "previewFirstByteMs": 1311,
+        "healthCompleteMs": 369,
+        "apiMs": 3522,
+        "healthMs": 369,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 9,
+        "totalMs": 12107,
+        "forkMs": 9450,
+        "previewResolveMs": 350,
+        "previewFirstByteMs": 1228,
+        "healthCompleteMs": 1079,
+        "apiMs": 9444,
+        "healthMs": 1079,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 9,
+        "totalMs": 7136,
+        "forkMs": 4052,
+        "previewResolveMs": 1555,
+        "previewFirstByteMs": 1230,
+        "healthCompleteMs": 298,
+        "apiMs": 4052,
+        "healthMs": 298,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 10,
+        "totalMs": 11873,
+        "forkMs": 9300,
+        "previewResolveMs": 273,
+        "previewFirstByteMs": 1368,
+        "healthCompleteMs": 932,
+        "apiMs": 9294,
+        "healthMs": 932,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 10,
+        "totalMs": 6514,
+        "forkMs": 3501,
+        "previewResolveMs": 1344,
+        "previewFirstByteMs": 1356,
+        "healthCompleteMs": 313,
+        "apiMs": 3501,
+        "healthMs": 313,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 11,
+        "totalMs": 14041,
+        "forkMs": 9172,
+        "previewResolveMs": 299,
+        "previewFirstByteMs": 3175,
+        "healthCompleteMs": 1395,
+        "apiMs": 9167,
+        "healthMs": 1395,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 11,
+        "totalMs": 7090,
+        "forkMs": 3740,
+        "previewResolveMs": 1428,
+        "previewFirstByteMs": 1340,
+        "healthCompleteMs": 582,
+        "apiMs": 3740,
+        "healthMs": 582,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 12,
+        "totalMs": 12502,
+        "forkMs": 9212,
+        "previewResolveMs": 401,
+        "previewFirstByteMs": 1540,
+        "healthCompleteMs": 1349,
+        "apiMs": 9207,
+        "healthMs": 1349,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 12,
+        "totalMs": 9292,
+        "forkMs": 3620,
+        "previewResolveMs": 3169,
+        "previewFirstByteMs": 2049,
+        "healthCompleteMs": 454,
+        "apiMs": 3620,
+        "healthMs": 454,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 13,
+        "totalMs": 13070,
+        "forkMs": 10624,
+        "previewResolveMs": 305,
+        "previewFirstByteMs": 1264,
+        "healthCompleteMs": 877,
+        "apiMs": 10617,
+        "healthMs": 877,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 13,
+        "totalMs": 6080,
+        "forkMs": 3507,
+        "previewResolveMs": 1149,
+        "previewFirstByteMs": 1108,
+        "healthCompleteMs": 316,
+        "apiMs": 3507,
+        "healthMs": 316,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 14,
+        "totalMs": 11822,
+        "forkMs": 9266,
+        "previewResolveMs": 251,
+        "previewFirstByteMs": 1179,
+        "healthCompleteMs": 1126,
+        "apiMs": 9259,
+        "healthMs": 1126,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 14,
+        "totalMs": 5838,
+        "forkMs": 3286,
+        "previewResolveMs": 1040,
+        "previewFirstByteMs": 1234,
+        "healthCompleteMs": 277,
+        "apiMs": 3286,
+        "healthMs": 277,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 15,
+        "totalMs": 13086,
+        "forkMs": 9178,
+        "previewResolveMs": 253,
+        "previewFirstByteMs": 2320,
+        "healthCompleteMs": 1335,
+        "apiMs": 9146,
+        "healthMs": 1335,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 15,
+        "totalMs": 7271,
+        "forkMs": 3834,
+        "previewResolveMs": 1236,
+        "previewFirstByteMs": 1783,
+        "healthCompleteMs": 419,
+        "apiMs": 3834,
+        "healthMs": 419,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 16,
+        "totalMs": 14189,
+        "forkMs": 10303,
+        "previewResolveMs": 258,
+        "previewFirstByteMs": 2399,
+        "healthCompleteMs": 1229,
+        "apiMs": 10294,
+        "healthMs": 1229,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 16,
+        "totalMs": 7377,
+        "forkMs": 3798,
+        "previewResolveMs": 1874,
+        "previewFirstByteMs": 1403,
+        "healthCompleteMs": 301,
+        "apiMs": 3798,
+        "healthMs": 301,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 17,
+        "totalMs": 14385,
+        "forkMs": 10409,
+        "previewResolveMs": 353,
+        "previewFirstByteMs": 2040,
+        "healthCompleteMs": 1584,
+        "apiMs": 10377,
+        "healthMs": 1584,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 17,
+        "totalMs": 6860,
+        "forkMs": 3773,
+        "previewResolveMs": 1402,
+        "previewFirstByteMs": 1345,
+        "healthCompleteMs": 340,
+        "apiMs": 3773,
+        "healthMs": 340,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 18,
+        "totalMs": 18095,
+        "forkMs": 8960,
+        "previewResolveMs": 1327,
+        "previewFirstByteMs": 1440,
+        "healthCompleteMs": 6367,
+        "apiMs": 8952,
+        "healthMs": 6367,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 18,
+        "totalMs": 6326,
+        "forkMs": 3555,
+        "previewResolveMs": 1208,
+        "previewFirstByteMs": 1257,
+        "healthCompleteMs": 307,
+        "apiMs": 3555,
+        "healthMs": 307,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "cold",
+        "i": 19,
+        "totalMs": 12628,
+        "forkMs": 9287,
+        "previewResolveMs": 397,
+        "previewFirstByteMs": 1528,
+        "healthCompleteMs": 1416,
+        "apiMs": 9255,
+        "healthMs": 1416,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      },
+      {
+        "app": "gitea",
+        "path": "warm",
+        "i": 19,
+        "totalMs": 7704,
+        "forkMs": 3582,
+        "previewResolveMs": 1394,
+        "previewFirstByteMs": 2347,
+        "healthCompleteMs": 381,
+        "apiMs": 3582,
+        "healthMs": 381,
+        "attempts": 1,
+        "flagged": false,
+        "ok": true
+      }
+    ],
+    "cold": {
+      "all": {
+        "n": 20,
+        "min": 11559,
+        "p50": 12568,
+        "p95": 17871,
+        "max": 18095,
+        "mean": 13319.2
+      },
+      "clean": {
+        "n": 20,
+        "min": 11559,
+        "p50": 12568,
+        "p95": 17871,
+        "max": 18095,
+        "mean": 13319.2
+      },
+      "flaggedCount": 0,
+      "failed": 0
+    },
+    "warm": {
+      "all": {
+        "n": 20,
+        "min": 5767,
+        "p50": 6860,
+        "p95": 13435,
+        "max": 20256,
+        "mean": 7921.4
+      },
+      "clean": {
+        "n": 20,
+        "min": 5767,
+        "p50": 6860,
+        "p95": 13435,
+        "max": 20256,
+        "mean": 7921.4
+      },
+      "flaggedCount": 0,
+      "failed": 0
+    },
+    "delta": 11011,
+    "deleteWarmPool": false,
+    "threshold": 500
+  },
+  "failure": null
+}

@@ -1,0 +1,270 @@
+{
+  "runId": "g5-2026-09-03T11-55-06-205Z",
+  "plan": "starter",
+  "verdict": "12/12 tiles streamed 4542 frames. Median 8.0 fps per tile, 355 KB/s aggregate (2.9 Mbps), 4 KB per frame. Within the section 7 prediction of about 720 KB/s.",
+  "inconclusive": false,
+  "observations": 4542,
+  "minObservations": 12,
+  "estimate": {
+    "sandboxSeconds": 240,
+    "browserSeconds": 780,
+    "usd": 0.02547
+  },
+  "actual": {
+    "sandboxSeconds": 76,
+    "browserSeconds": 858.1,
+    "usd": 0.02504
+  },
+  "costBasis": {
+    "measuredUsd": 0.02504,
+    "modelledUsd": 0,
+    "measuredFraction": 1,
+    "rows": [
+      {
+        "kind": "browser",
+        "seconds": 858.0922392719999,
+        "usd": 0.023835895535333333,
+        "measured": true,
+        "note": "12 browser sessions, observed elapsed"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 76.025448844,
+        "usd": 0.0012037362733633332,
+        "measured": true,
+        "note": "relay target sandbox, observed lifetime"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 1122
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 4504
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/8099",
+      "status": 200,
+      "ms": 1075
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1265
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 271
+    }
+  ],
+  "data": {
+    "target": {
+      "url": "https://91975b313747a559a3e8-8099.preview.getsolari.com/index.html?pt_token=REDACTED",
+      "headers": {
+        "connection": "keep-alive",
+        "content-length": "395",
+        "content-type": "text/html",
+        "date": "Thu, 03 Sep 2026 11:55:15 GMT",
+        "last-modified": "Thu, 03 Sep 2026 11:55:09 GMT",
+        "server": "SimpleHTTP/0.6 Python/3.11.2",
+        "set-cookie": "__pt_preview=REDACTED; Domain=91975b313747a559a3e8-8099.preview.getsolari.com; Path=/; HttpOnly; Secure; SameSite=None; Partitioned; Max-Age=3597"
+      },
+      "setCookies": [
+        "AWSALB=REDACTED; Expires=Thu, 10 Sep 2026 11:55:15 GMT; Path=/",
+        "AWSALBCORS=REDACTED; Expires=Thu, 10 Sep 2026 11:55:15 GMT; Path=/; SameSite=None; Secure",
+        "__pt_preview=REDACTED; Domain=91975b313747a559a3e8-8099.preview.getsolari.com; Path=/; HttpOnly; Secure; SameSite=None; Partitioned; Max-Age=3597"
+      ],
+      "status": 200,
+      "concurrent": {
+        "clients": 12,
+        "ok": 12,
+        "failed": 0,
+        "p50Ms": 1242,
+        "maxMs": 1315
+      },
+      "viaPreview": {
+        "firstMs": 817,
+        "restMs": [
+          1071,
+          255,
+          256,
+          274,
+          255,
+          253,
+          261,
+          258,
+          252,
+          274,
+          697,
+          1429,
+          285,
+          341,
+          288,
+          251,
+          265,
+          260,
+          298
+        ],
+        "p50Ms": 265,
+        "p95Ms": 1429,
+        "minMs": 251
+      },
+      "viaLoopback": {
+        "firstMs": 1,
+        "restMs": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "p50Ms": 0,
+        "p95Ms": 1,
+        "minMs": 0
+      }
+    },
+    "tiles": [
+      {
+        "idx": 0,
+        "frames": 380,
+        "bytes": 1368756,
+        "firstFrameMs": 3391,
+        "fps": 7.89802588616011,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 1,
+        "frames": 383,
+        "bytes": 1378627,
+        "firstFrameMs": 3468,
+        "fps": 7.962498989486634,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 2,
+        "frames": 379,
+        "bytes": 1366284,
+        "firstFrameMs": 3587,
+        "fps": 7.854159538349853,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 3,
+        "frames": 326,
+        "bytes": 1173709,
+        "firstFrameMs": 3586,
+        "fps": 6.755452135125878,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 4,
+        "frames": 407,
+        "bytes": 1466494,
+        "firstFrameMs": 3586,
+        "fps": 8.427057158333248,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 5,
+        "frames": 386,
+        "bytes": 1388250,
+        "firstFrameMs": 3661,
+        "fps": 7.980779181894723,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 6,
+        "frames": 387,
+        "bytes": 1392856,
+        "firstFrameMs": 3710,
+        "fps": 8.005396757259765,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 7,
+        "frames": 396,
+        "bytes": 1425768,
+        "firstFrameMs": 3618,
+        "fps": 8.191807992652667,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 8,
+        "frames": 392,
+        "bytes": 1408398,
+        "firstFrameMs": 3775,
+        "fps": 8.087310613804032,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 9,
+        "frames": 390,
+        "bytes": 1403195,
+        "firstFrameMs": 3750,
+        "fps": 8.046077606814762,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 10,
+        "frames": 322,
+        "bytes": 1159964,
+        "firstFrameMs": 3894,
+        "fps": 6.624306707671756,
+        "session": "id_redacted"
+      },
+      {
+        "idx": 11,
+        "frames": 394,
+        "bytes": 1418663,
+        "firstFrameMs": 3867,
+        "fps": 8.1141365127321,
+        "session": "id_redacted"
+      }
+    ],
+    "totalFrames": 4542,
+    "totalBytes": 16350964,
+    "kbPerS": 354.83862847222224,
+    "mbps": 2.9068380444444446,
+    "bytesPerFrame": 3599.9480405107884,
+    "fps": {
+      "n": 12,
+      "min": 6.624306707671756,
+      "p50": 7.980779181894723,
+      "p95": 8.427057158333248,
+      "max": 8.427057158333248,
+      "mean": 7.8
+    },
+    "streamed": true
+  },
+  "failure": null
+}

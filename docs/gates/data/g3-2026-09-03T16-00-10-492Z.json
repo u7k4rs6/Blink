@@ -1,0 +1,380 @@
+{
+  "runId": "g3-2026-09-03T16-00-10-492Z",
+  "plan": "starter",
+  "verdict": "Resume to healthy p50 4740 ms, p95 5904 ms. Pause frees the concurrency slot: CONFIRMED. PREVIEW ROUTE: a URL resolved BEFORE the pause STILL WORKS after the resume (1152 ms first byte, no re-resolve). The pre-resolve design holds, and it saves the 1329 ms that resolving after a resume costs. This is the measurement the design was resting on. Q17: preview traffic DOES reset the idle clock, so layer 3 is weak and layer 2 carries the load.",
+  "inconclusive": false,
+  "observations": 8,
+  "minObservations": 4,
+  "estimate": {
+    "sandboxSeconds": 625,
+    "browserSeconds": 0,
+    "usd": 0.0099
+  },
+  "actual": {
+    "sandboxSeconds": 469.2,
+    "browserSeconds": 0,
+    "usd": 0.00734
+  },
+  "costBasis": {
+    "measuredUsd": 0.00038,
+    "modelledUsd": 0.00695,
+    "measuredFraction": 0.052,
+    "rows": [
+      {
+        "kind": "sandbox",
+        "seconds": 30,
+        "usd": 0.0003833333333333333,
+        "measured": false,
+        "note": "concurrency probe, flat model"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 220,
+        "usd": 0.003483333333333333,
+        "measured": false,
+        "note": "resume-latency sandbox, flat model"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 24.194717785999995,
+        "usd": 0.00038308303161166656,
+        "measured": true,
+        "note": "route-survival probe, observed lifetime"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 195,
+        "usd": 0.0030875,
+        "measured": false,
+        "note": "Q17 idle-clock probe, flat model"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10069
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1271
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12516
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 1320
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 277
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 2179
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1285
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12297
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3321
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 3320
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12170
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3207
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1224
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11916
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3124
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1123
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12140
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3578
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1303
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12059
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3036
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1088
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12309
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3250
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1402
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 12239
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3047
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1089
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 300
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9794
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1244
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/pause",
+      "status": 200,
+      "ms": 11906
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/resume",
+      "status": 200,
+      "ms": 3262
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1329
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 308
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 10131
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1397
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 1472
+    }
+  ],
+  "data": {
+    "resumeMs": [
+      4692,
+      5067,
+      4773,
+      5904,
+      5461,
+      4536,
+      4740,
+      4413
+    ],
+    "pauseMs": [
+      12516,
+      12298,
+      12171,
+      11916,
+      12141,
+      12060,
+      12309,
+      12240
+    ],
+    "resume": {
+      "n": 8,
+      "min": 4413,
+      "p50": 4740,
+      "p95": 5904,
+      "max": 5904,
+      "mean": 4948.3
+    },
+    "pause": {
+      "n": 8,
+      "min": 11916,
+      "p50": 12171,
+      "p95": 12516,
+      "max": 12516,
+      "mean": 12206.4
+    },
+    "concurrencyFreed": true,
+    "concurrencyDetail": "created a second sandbox while the first was paused, so the paused one holds no slot",
+    "route": {
+      "hostChanged": false,
+      "freshFirstByteMs": 1569,
+      "prePauseSteadyMs": 1267,
+      "storedUrlStillWorks": true,
+      "storedUrlFirstByteMs": 1152,
+      "storedUrlSecondMs": 1203,
+      "resolveAfterResumeMs": 1329,
+      "postResumeFirstByteMs": 304,
+      "postResumeSecondMs": 320,
+      "allOk": true
+    },
+    "q17": {
+      "requests": 58,
+      "died": false,
+      "diedAtMs": null,
+      "resetsClock": true
+    }
+  },
+  "failure": null
+}

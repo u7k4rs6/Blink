@@ -1,0 +1,83 @@
+{
+  "runId": "g2-2026-09-03T15-24-26-683Z",
+  "plan": "starter",
+  "verdict": "Iframe refused, new-tab-plus-toolbar is the design (D5), which was already the default. Uptime Kuma websockets behind previewUrl: not determined.",
+  "inconclusive": false,
+  "observations": 1,
+  "minObservations": 1,
+  "estimate": {
+    "sandboxSeconds": 90,
+    "browserSeconds": 0,
+    "usd": 0.00143
+  },
+  "actual": {
+    "sandboxSeconds": 90,
+    "browserSeconds": 0,
+    "usd": 0.00143
+  },
+  "costBasis": {
+    "measuredUsd": 0,
+    "modelledUsd": 0.00143,
+    "measuredFraction": 0,
+    "rows": [
+      {
+        "kind": "sandbox",
+        "seconds": 90,
+        "usd": 0.001425,
+        "measured": false,
+        "note": "gitea framing probe, flat model"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9732
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3000",
+      "status": 200,
+      "ms": 1095
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 244
+    }
+  ],
+  "data": {
+    "findings": [
+      {
+        "app": "gitea",
+        "reachable": true,
+        "status": 200,
+        "xFrameOptions": "SAMEORIGIN",
+        "frameAncestors": null,
+        "framable": false,
+        "setCookie": "present",
+        "sameSite": "None",
+        "absoluteUrlsSeen": [
+          "https://docs.gitea.com",
+          "https://docs.gitea.com/installation/install-from-binary",
+          "https://github.com/go-gitea/gitea/tree/master/docker",
+          "https://docs.gitea.com/installation/install-from-package",
+          "https://go.dev/"
+        ],
+        "websocketUpgrade": {
+          "attempted": false,
+          "ok": null,
+          "detail": "not applicable"
+        },
+        "tokenlessRefused": true
+      }
+    ]
+  },
+  "failure": null
+}

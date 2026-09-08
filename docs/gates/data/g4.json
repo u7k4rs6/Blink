@@ -1,0 +1,185 @@
+{
+  "runId": "g4-2026-09-03T11-20-05-074Z",
+  "plan": "starter",
+  "verdict": "Minted 5/5 snapshots with no ceiling reached. Creation time 10309 to 11354 ms. Deletion with a live child refused as documented. Cleaned up 5, left 0.",
+  "estimate": {
+    "sandboxSeconds": 330,
+    "browserSeconds": 0,
+    "usd": 0.00523
+  },
+  "actual": {
+    "sandboxSeconds": 330,
+    "browserSeconds": 0,
+    "usd": 0.00523
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/snapshots",
+      "status": 200,
+      "ms": 1536
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 3125
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 286
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/snapshots",
+      "status": 201,
+      "ms": 10308
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/snapshots",
+      "status": 201,
+      "ms": 11228
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/snapshots",
+      "status": 201,
+      "ms": 11353
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/snapshots",
+      "status": 201,
+      "ms": 11081
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/snapshots",
+      "status": 201,
+      "ms": 11044
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 9596
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5n35s7bhxp",
+      "status": 409,
+      "ms": 1151
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 274
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 274
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/snapshots",
+      "status": 200,
+      "ms": 275
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5n35s7bhxp",
+      "status": 200,
+      "ms": 446
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5n3avzzqw7",
+      "status": 200,
+      "ms": 396
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5n3g6bepiw",
+      "status": 200,
+      "ms": 429
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5n3laomk4y",
+      "status": 200,
+      "ms": 408
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5n3q8q4fjg",
+      "status": 200,
+      "ms": 420
+    }
+  ],
+  "data": {
+    "before": 6,
+    "created": [
+      {
+        "id": "snap_dl5n35s7bhxp",
+        "ms": 10309,
+        "sizeBytes": 3839483980
+      },
+      {
+        "id": "snap_dl5n3avzzqw7",
+        "ms": 11229,
+        "sizeBytes": 3841449386
+      },
+      {
+        "id": "snap_dl5n3g6bepiw",
+        "ms": 11354,
+        "sizeBytes": 3841449386
+      },
+      {
+        "id": "snap_dl5n3laomk4y",
+        "ms": 11082,
+        "sizeBytes": 3841449389
+      },
+      {
+        "id": "snap_dl5n3q8q4fjg",
+        "ms": 11045,
+        "sizeBytes": 3841449387
+      }
+    ],
+    "deleted": [
+      "snap_dl5n35s7bhxp",
+      "snap_dl5n3avzzqw7",
+      "snap_dl5n3g6bepiw",
+      "snap_dl5n3laomk4y",
+      "snap_dl5n3q8q4fjg"
+    ],
+    "undeleted": [],
+    "ceilingHit": null,
+    "childDeletionRefused": true,
+    "childDeletionDetail": "deletion refused as documented: Snapshot has live children and cannot be deleted"
+  },
+  "failure": null
+}

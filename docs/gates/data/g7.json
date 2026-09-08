@@ -1,0 +1,64 @@
+{
+  "runId": "g7-2026-09-03T11-22-14-286Z",
+  "plan": "starter",
+  "verdict": "Overrun returned 429 ConcurrencyLimitExceeded in 250 ms. 429 as documented. Immediate. Retry-After: absent.",
+  "estimate": {
+    "sandboxSeconds": 180,
+    "browserSeconds": 0,
+    "usd": 0.00285
+  },
+  "actual": {
+    "sandboxSeconds": 180,
+    "browserSeconds": 0,
+    "usd": 0.0023
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 918
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 1089
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 269
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 320
+    }
+  ],
+  "data": {
+    "cap": 2,
+    "filled": 2,
+    "overrun": {
+      "status": 429,
+      "code": "ConcurrencyLimitExceeded",
+      "retryAfter": null,
+      "ms": 250,
+      "attempts": 1,
+      "bodyKeys": [
+        "code",
+        "error",
+        "detail",
+        "retryable"
+      ],
+      "raw": "{\"code\":\"ConcurrencyLimitExceeded\",\"error\":\"Too many concurrent sessions\",\"detail\":\"2 running session(s) and 0 create/resume(s) in progress hold 2 of 2 slot(s)\",\"retryable\":true}"
+    }
+  },
+  "failure": null
+}

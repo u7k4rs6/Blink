@@ -1,0 +1,170 @@
+{
+  "runId": "g6-2026-09-03T11-54-23-031Z",
+  "plan": "starter",
+  "verdict": "INCONCLUSIVE. The gate did not reach the egress test, so this run is evidence of NOTHING about Q5, in either direction. Fix the blocking step and re-run before drawing any conclusion.",
+  "inconclusive": false,
+  "observations": 5,
+  "minObservations": 5,
+  "estimate": {
+    "sandboxSeconds": 260,
+    "browserSeconds": 0,
+    "usd": 0.00412
+  },
+  "actual": {
+    "sandboxSeconds": 260,
+    "browserSeconds": 0,
+    "usd": 0.00412
+  },
+  "costBasis": {
+    "measuredUsd": 0,
+    "modelledUsd": 0.00412,
+    "measuredFraction": 0,
+    "rows": [
+      {
+        "kind": "sandbox",
+        "seconds": 260,
+        "usd": 0.004116666666666667,
+        "measured": false,
+        "note": "egress probe sandbox, flat model"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 6933
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1843
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/snapshots",
+      "status": 201,
+      "ms": 10244
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 2628
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/snapshots",
+      "status": 201,
+      "ms": 10537
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/snapshots",
+      "status": 200,
+      "ms": 1247
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5ntgyb1jmu",
+      "status": 200,
+      "ms": 516
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/snapshots/snap_dl5ntmvtz2n2",
+      "status": 200,
+      "ms": 559
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 2198
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 3912
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 266
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 273
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 258
+    }
+  ],
+  "data": {
+    "steps": [
+      {
+        "name": "probe tool (curl) available",
+        "ok": true,
+        "detail": "present in the base template"
+      },
+      {
+        "name": "snapshot size delta for a real install",
+        "ok": true,
+        "detail": "before 3839483309 B, after 3841514857 B, delta 2031548 B. Payload: gitea version 1.27.3 built with go1.26.7-X:jsonv2 : bindata\n126007248\n/dev/root      ext4     4046560 1699744   2120720 "
+      },
+      {
+        "name": "baseline outbound works",
+        "ok": true,
+        "detail": "curl returned \"200\""
+      },
+      {
+        "name": "nftables available in guest",
+        "ok": true,
+        "detail": "/usr/sbin/nft\nINSTALLED"
+      },
+      {
+        "name": "deny-all-except-loopback installed",
+        "ok": false,
+        "detail": "Error: Could not process rule: Operation not supported\nadd table inet blink\n^^^^^^^^^^^^^^^^^^^^^\nAPPLY_FAILED"
+      },
+      {
+        "name": "why the firewall could not be installed",
+        "ok": null,
+        "detail": "uid=0 | CapEff: CapEff:\t000001ffffffffff | nf_tables module: 0 | 0 | modprobe: sh: 1: modprobe: not found | nft list: netlink: Error: cache initialization failed: Invalid argument | iptables fallback: sh: 1: iptables: not found"
+      }
+    ],
+    "sizeDelta": {
+      "beforeBytes": 3839483309,
+      "afterBytes": 3841514857,
+      "deltaBytes": 2031548,
+      "payload": "gitea version 1.27.3 built with go1.26.7-X:jsonv2 : bindata\n126007248\n/dev/root      ext4     4046560 1699744   2120720      45% /\n/dev/root      ext4     4046560 1699744   2120720      45% /"
+    },
+    "observations": 5,
+    "capDiag": "uid=0\nCapEff: CapEff:\t000001ffffffffff\nnf_tables module: 0\n0\nmodprobe: sh: 1: modprobe: not found\nnft list: netlink: Error: cache initialization failed: Invalid argument\niptables fallback: sh: 1: iptables: not found",
+    "mountInfo": "gitea version 1.27.3 built with go1.26.7-X:jsonv2 : bindata\n126007248\n/dev/root      ext4     4046560 1699744   2120720      45% /\n/dev/root      ext4     4046560 1699744   2120720      45% /",
+    "capMissing": false
+  },
+  "failure": null
+}

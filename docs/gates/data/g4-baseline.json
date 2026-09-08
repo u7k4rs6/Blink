@@ -1,0 +1,53 @@
+{
+  "capturedAt": "2026-09-03T11:20:06.615Z",
+  "plan": "starter",
+  "starterEnds": null,
+  "maxSandboxes": 2,
+  "maxBrowsers": 20,
+  "snapshotCount": 6,
+  "totalBytes": 23712578982,
+  "snapshots": [
+    {
+      "id": "snap_dl4yditus22a",
+      "name": "thrice-jaeger-2.20.0-ready",
+      "sizeBytes": 3839352744,
+      "createdAt": "2026-09-02T15:58:31.549Z",
+      "template": "base"
+    },
+    {
+      "id": "snap_dl50p1pj5842",
+      "name": "thrice-jaeger-2.16.0-ready",
+      "sizeBytes": 3973963698,
+      "createdAt": "2026-09-02T17:47:29.839Z",
+      "template": "base"
+    },
+    {
+      "id": "snap_dl4x5fwmhxbj",
+      "name": "thrice-jaeger-2.19.0-ready",
+      "sizeBytes": 3976257444,
+      "createdAt": "2026-09-02T15:00:52.541Z",
+      "template": "base"
+    },
+    {
+      "id": "snap_dl50q1h9wk1b",
+      "name": "thrice-jaeger-2.17.0-ready",
+      "sizeBytes": 3974422360,
+      "createdAt": "2026-09-02T17:48:48.948Z",
+      "template": "base"
+    },
+    {
+      "id": "snap_dl4x5frwj6ib",
+      "name": "thrice-jaeger-2.14.0-ready",
+      "sizeBytes": 3974029218,
+      "createdAt": "2026-09-02T15:00:51.631Z",
+      "template": "base"
+    },
+    {
+      "id": "snap_dl50rvgrafrw",
+      "name": "thrice-jaeger-2.18.0-ready",
+      "sizeBytes": 3974553518,
+      "createdAt": "2026-09-02T17:51:12.575Z",
+      "template": "base"
+    }
+  ]
+}

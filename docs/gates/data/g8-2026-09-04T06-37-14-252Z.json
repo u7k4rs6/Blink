@@ -1,0 +1,81 @@
+{
+  "runId": "g8-2026-09-04T06-37-14-252Z",
+  "plan": "starter",
+  "verdict": "Q20 RESOLVED POSITIVE. A real Chromium page loaded from the preview origin opened a WebSocket to Uptime Kuma and received an engine.io OPEN packet. The browser supplied the Origin header itself, so the branch that V68 could not reach, origin present and compared against Host, was exercised and passed. The preview domain presents Host and Origin consistently to the guest. Uptime Kuma is shippable as a catalog card without disabling its origin check.",
+  "inconclusive": false,
+  "observations": 1,
+  "minObservations": 1,
+  "estimate": {
+    "sandboxSeconds": 180,
+    "browserSeconds": 120,
+    "usd": 0.00618
+  },
+  "actual": {
+    "sandboxSeconds": 22.8,
+    "browserSeconds": 6.8,
+    "usd": 0.00055
+  },
+  "costBasis": {
+    "measuredUsd": 0.00055,
+    "modelledUsd": 0,
+    "measuredFraction": 1,
+    "rows": [
+      {
+        "kind": "browser",
+        "seconds": 6.816205867000001,
+        "usd": 0.00018933905186111115,
+        "measured": true,
+        "note": "one browser session, observed elapsed"
+      },
+      {
+        "kind": "sandbox",
+        "seconds": 22.841990904,
+        "usd": 0.00036166485598,
+        "measured": true,
+        "note": "g8 target sandbox"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes",
+      "status": 201,
+      "ms": 11840
+    },
+    {
+      "n": 1,
+      "method": "POST",
+      "path": "/sandboxes/REDACTED_ID/exec",
+      "status": 200,
+      "ms": 1146
+    },
+    {
+      "n": 1,
+      "method": "GET",
+      "path": "/sandboxes/REDACTED_ID/ports/3001",
+      "status": 200,
+      "ms": 298
+    },
+    {
+      "n": 1,
+      "method": "DELETE",
+      "path": "/sandboxes/REDACTED_ID",
+      "status": 200,
+      "ms": 814
+    }
+  ],
+  "data": {
+    "question": "Q20",
+    "previewOrigin": "https://a6d41d6869b1575082ce-3001.preview.getsolari.com",
+    "admitted": true,
+    "why": "OPEN packet",
+    "firstFrame": "0{\"sid\":\"_lDUzVMCbJrT4pBVAAAE\",\"upgrades\":[],\"pingInterval\":25000,\"pingTimeout\":20000,\"maxPayload\":1000000}",
+    "forkToHealthyMs": 1147,
+    "browserSeconds": 6.8,
+    "session": "id_1ih4pcg",
+    "bypassFlagUsed": false
+  },
+  "failure": null
+}
