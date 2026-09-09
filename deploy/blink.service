@@ -1,0 +1,62 @@
+# systemd unit for the Blink web server.
+#
+# Three things here are load bearing rather than boilerplate, and each one exists
+# because the alternative was measured or hit.
+
+[Unit]
+Description=Blink
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=blink
+Group=blink
+WorkingDirectory=/opt/blink
+
+# TZ=UTC is REQUIRED, not a preference. src/day.ts asserts it at boot and the
+# server refuses launches without it, because node-pg parses a `date` column at
+# LOCAL midnight: a non-UTC process files every ledger row under the wrong day
+# and the daily ceiling silently resets early. That bug happened once already
+# and was invisible in every environment except the real one.
+Environment=TZ=UTC
+Environment=NODE_ENV=production
+Environment=PORT=8787
+
+# Secrets come from a file mode 600 owned by blink, never from this unit, which
+# is world readable via systemctl cat.
+EnvironmentFile=/etc/blink/blink.env
+
+ExecStart=/usr/bin/node /opt/blink/src/web/server.ts
+
+# SIGTERM, then time to settle. The server kills every live instance and writes
+# their receipts on shutdown; killing it faster than that leaks sandboxes that
+# bill until the platform timeout catches them.
+KillSignal=SIGTERM
+TimeoutStopSec=45
+
+Restart=always
+RestartSec=3
+
+# The boot path adopts orphaned instances from the previous process, so a restart
+# settles what it left behind rather than abandoning it.
+
+# Hardening. The process needs to write its instance log and read its config,
+# and nothing else.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/blink
+StateDirectory=blink
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+# Caddy terminates TLS and proxies to the app on localhost.
+#
+# Caddy rather than nginx for one reason: automatic certificates with no cron
+# job to forget. Fewer moving parts is the whole argument.
+
+blink.example {
+	encode gzip
+
+	# The app sets its own no-store, DENY and noreferrer headers on every
+	# response, because a preview URL can appear in a page and must never be
+	# cached by an intermediary or framed by a third party. These are here as a
+	# floor in case a future route forgets.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	# Share and instance pages carry tokens in their URLs and are noindex in the
+	# markup. This stops well behaved crawlers a step earlier.
+	handle /robots.txt {
+		respond "User-agent: *
+Disallow: /s/
+Disallow: /instance/
+Disallow: /toolbar/
+Disallow: /report/
+" 200
+	}
+
+	reverse_proxy 127.0.0.1:8787 {
+		# The app reads this to rate limit and to hash per IP. Without it every
+		# visitor looks like the proxy and per-IP ceilings become one global one.
+		header_up X-Forwarded-For {remote_host}
+	}
+}

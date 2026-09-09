@@ -1,0 +1,67 @@
+# systemd USER unit for running Blink from this laptop.
+#
+#   mkdir -p ~/.config/systemd/user
+#   cp deploy/tunnel/blink.user.service ~/.config/systemd/user/blink.service
+#   ${EDITOR} ~/.config/systemd/user/blink.service   # set the two paths below
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now blink
+#
+# WHY A UNIT AND NOT A TERMINAL
+#
+# run.sh puts its three children in their own process group so it can drain
+# them, but run.sh itself is a child of whatever started it. Close the terminal,
+# or have the tool that opened it exit, and the whole tree goes: site down,
+# canary stopped mid run, any sandbox it held left for the next start to sweep.
+# setsid and disown are not enough when the parent is torn down by session or
+# cgroup. systemd owns the process instead, which is the whole point of it.
+#
+# This is a USER unit deliberately. A system unit would need root and would try
+# to start at boot before the desktop session exists; the site's honest claim is
+# that it is up while this machine is awake and logged in, and a user unit is
+# exactly that lifetime. Lingering is left off for the same reason: enabling it
+# would make the service outlive the login and quietly overstate the claim.
+
+[Unit]
+Description=Blink (web server, watchdog and Cloudflare Tunnel)
+
+# Give up after five failures in half an hour rather than looping forever. A hot
+# restart loop runs a Solari sweep every 60 seconds, which costs real money, and
+# the offline page covers visitors meanwhile. A stopped unit is visible in
+# `systemctl --user status blink`; an infinite restart loop is not.
+StartLimitBurst=5
+StartLimitIntervalSec=1800
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# EDIT THESE TWO. WorkingDirectory is the repo; BLINK_ENV_FILES is a colon
+# separated list of env files, later ones winning, and it is how the Solari key
+# stays outside this repo. No secret is written into this unit.
+WorkingDirectory=%h/Desktop/Blink
+Environment=BLINK_ENV_FILES=%h/Desktop/thrice/.env:./.env
+
+Environment=TZ=UTC
+Environment=PATH=%h/.nvm/versions/node/v24.15.0/bin:/usr/local/bin:/usr/bin:/bin
+
+ExecStart=/bin/sh deploy/tunnel/run.sh
+
+# run.sh traps SIGTERM and drains for 45 seconds before exiting. Anything
+# shorter here would have systemd SIGKILL it mid drain, which is the leak the
+# drain exists to prevent.
+KillSignal=SIGTERM
+TimeoutStopSec=90
+
+# Crash recovery, not a substitute for the watchdog. RestartSec is longer than
+# the drain so a restart cannot overlap the previous instance's sweep.
+#
+# This depends on run.sh exiting NON-ZERO when a child dies. It used to exit 0
+# on every path, so a crash drained tidily, reported success, and sat there:
+# the unit claimed crash recovery and the recovery could not fire.
+Restart=on-failure
+RestartSec=60
+
+
+[Install]
+WantedBy=default.target

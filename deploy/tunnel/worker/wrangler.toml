@@ -1,0 +1,16 @@
+name = "blink-offline"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# The Worker runs on the Blink hostname only. The apex and www keep going
+# straight to GitHub Pages, untouched.
+routes = [
+  { pattern = "blink.utkarshbahuguna.me/*", zone_name = "utkarshbahuguna.me" }
+]
+
+# Holds the cached snapshot the offline page shows. Create it once with:
+#   npx wrangler kv namespace create BLINK_KV
+# then paste the id it prints below.
+[[kv_namespaces]]
+binding = "BLINK_KV"
+id = "25737df7daa542ae9440d06067db7bb9"
