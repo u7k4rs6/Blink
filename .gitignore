@@ -10,3 +10,6 @@ node_modules/
 # Local run state and measurement scratch.
 .playwright-mcp/
 *.log
+
+# screen recordings live in ~/Videos, not in the repo
+*.mp4
