@@ -1,11 +1,77 @@
+<p align="center">
+  <img src="docs/art/hero.svg" alt="Blink: press launch, get a real machine" width="100%">
+</p>
+
 # Blink
 
-Pick an open source app, tap Launch, get your own seeded disposable instance in
-about a second. Each instance is a Solari sandbox forked from a snapshot, served
-over `previewUrl`, dead in 10 minutes, ending with a cost receipt.
+Pick an open source app, press Launch, and a private Linux machine wakes up with
+that app already running and already full of data. It is yours alone for ten
+minutes. Then it destroys itself and tells you what it cost.
 
-**This repository currently contains Phase 0 and Phase 1 only: the verification
-record and the gates harness. There is no product code yet, by design.**
+Each instance is a [Solari](https://docs.getsolari.com) sandbox forked from a
+snapshot and served over `previewUrl`. It is not a shared demo that gets wiped
+between visitors. It is one machine, forked for you, and destroyed after you.
+
+**Live at [blink.utkarshbahuguna.me](https://blink.utkarshbahuguna.me).** It runs
+from a laptop behind a Cloudflare Tunnel. That is said here rather than left to
+be discovered, because it is the honest description of the deployment and it is
+why the site can be asleep.
+
+<p align="center">
+  <img src="docs/art/breakdown.svg" alt="5.5 seconds to your browser: 3.6s waking a private machine, 0.3s the app starting, 1.3s your browser fetching page one" width="100%">
+</p>
+
+Every timing on the site is published as its parts rather than as a total,
+because a total hides which part you are actually waiting for. The app is the
+fastest thing in that bar. Most of what you wait for is a real computer waking
+up, and that is the number worth being honest about.
+
+## How a launch works
+
+<p align="center">
+  <img src="docs/art/flow.svg" alt="Press launch: fork, health check, preview URL, ten minutes, gone" width="100%">
+</p>
+
+A fork copies a snapshot that already holds the app, its data and its warm
+memory, so nothing installs and nothing seeds while you wait. The health check
+runs over loopback **inside** the machine rather than across the internet,
+because the first version of it measured the network and blamed the app.
+`previewUrl` is resolved before the guest is armed, so the URL is ready the
+moment the machine is.
+
+Your ten minutes start at handover, not at fork. An instance that was ready three
+minutes before you could use it has not been yours for three minutes.
+
+## The catalog
+
+<p align="center">
+  <img src="docs/art/apps.svg" alt="Five apps: Gitea, Jaeger, Excalidraw, Uptime Kuma, Metabase" width="100%">
+</p>
+
+Every app is seeded at snapshot build time, so the first screen has something on
+it. An empty Jaeger and a working Jaeger look identical to a health check and
+completely different to a person, which is the whole reason the seeding exists.
+
+Each card also decides where it drops you. Gitea opens on its issue list, Jaeger
+on a search that already has traces in range, Uptime Kuma on the dashboard. A
+card that does not match its arrival does not ship.
+
+## Ten minutes, then it is gone
+
+<p align="center">
+  <img src="docs/art/lifetime.svg" alt="Ten minutes, then it destroys itself" width="100%">
+</p>
+
+Expiry is three independent layers, because any one of them can be the thing that
+fails:
+
+1. **The server sweeps.** An in-process sweeper destroys instances past their
+   deadline.
+2. **The guest kills itself.** `blink-boot arm` runs inside the machine and does
+   not need the server to be alive or reachable.
+3. **The platform times out.** A 180 second `onTimeout: "kill"` deadline, pushed
+   out by a heartbeat every 45 seconds. If this server dies, every sandbox it
+   forgot is gone within three minutes rather than within twelve.
 
 ## Documents
 
@@ -19,13 +85,13 @@ record and the gates harness. There is no product code yet, by design.**
 
 ## The gates
 
-Seven gates answer the questions that decide the build. Each is separately
+Eight gates answer the questions that decide the build. Each is separately
 runnable, writes a markdown report into `docs/gates/` and raw JSON into
 `docs/gates/data/`, and prints its own cost before it starts and after it
 finishes.
 
 ```
-npm run gates            # pre-flight the whole run, then run G1 to G7
+npm run gates            # pre-flight the whole run, then run G1 to G8
 npm run gates -- --dry-run          # estimate only, zero credits
 npm run gates -- --only=g2,g6       # a subset
 npm run gate:g1          # one gate
@@ -56,6 +122,7 @@ npm run check:excalidraw-assets       # fork the snapshot and prove fonts are se
 | G5 | CDP screencast relay: fps and bandwidth for 12 tiles in one process. |
 | G6 | Can outbound egress be restricted, by a guest-side `nftables` firewall or otherwise. |
 | G7 | Is the concurrency 429 immediate and non-retryable, and does it carry `Retry-After`. |
+| G8 | Does a real browser's WebSocket survive Uptime Kuma's origin check behind `previewUrl`. A protocol that carries upgrades is not the same claim as a browser being admitted. |
 
 ### Rules the harness enforces, so no gate can forget one
 
@@ -85,26 +152,42 @@ npm run check:excalidraw-assets       # fork the snapshot and prove fonts are se
 ## Layout
 
 ```
-src/solari/      adapter, counting fetch, recorded fixtures
-src/guard/       budget guard and sandbox ledger, ported from thrice
-scripts/gates/   one runnable script per gate, plus the runner and sweeper
-test/            unit tests against fixtures, zero credits
-docs/gates/      reports written by the gates
+src/orchestrator/   the launch state machine, the runner and the instance store
+src/guard/          budget guard and sandbox ledger
+src/solari/         adapter, counting fetch, recorded fixtures
+src/web/            server, rendering, design tokens, the pixel field
+src/canary/         continuous checks and the screenshots on the cards
+src/warmpool/       warm pool and its own state machine
+src/queue/          admission queue and promotion
+src/billing/        per session cost, recorded rather than derived
+src/redact.ts       structural redaction, with safe-io as the only writer
+scripts/snapshots/  one recipe per app, plus the shared template
+scripts/gates/      one runnable script per gate, plus the runner and sweeper
+test/               unit tests against fixtures, zero credits
+docs/art/           the figures above, and the script that draws them
+docs/gates/         reports written by the gates
+deploy/tunnel/      systemd unit, the tunnel runner and the edge worker
 ```
 
 ## Prerequisites
 
-Node 23.6 or newer (native TypeScript type stripping, so there is no build step).
-`nvm use` picks it up from `.nvmrc`.
+Node 24 (native TypeScript type stripping, so there is no build step). `nvm use`
+picks it up from `.nvmrc`.
 
 ```
 npm install
 cp .env.example .env    # then fill in SOLARI_API_KEY
 ```
 
-G1, G2 and G3 fork from app snapshots and **skip cleanly** until those exist. The
-gates never build snapshots; that is day-2 product work. Record ids in
-`scripts/gates/snapshots.json`, see `snapshots.example.json`.
+```
+npm run web              # the site
+npm test                 # 411 tests against fixtures, zero credits
+npm run typecheck
+npm run watchdog         # watches the site, the tunnel and itself
+```
+
+The gates and the snapshot recipes are below, and both spend real money, so both
+are opt in and both print what they will cost before they start.
 
 ## Three mistakes we found in our own measuring
 
@@ -553,23 +636,29 @@ The raw samples behind every published figure are in `docs/gates/data/`, so none
 
 ## Status
 
-Phase 0 complete. Phase 1 complete. All seven gates have run live. Four snapshot
-recipes exist: Gitea, Jaeger and Metabase are built and in the registry;
-Excalidraw and Uptime Kuma are the current work.
+All five apps are built, seeded and in the catalog: Gitea, Jaeger, Excalidraw,
+Uptime Kuma and Metabase. All eight gates have run live. The site is deployed,
+watched and self restarting.
 
-198 tests pass against recorded fixtures, so CI still spends nothing.
+**411 tests pass** against recorded fixtures, so CI still spends nothing.
+[`docs/00-verification.md`](docs/00-verification.md) holds **114 rows**, one per
+claim, each with what was checked, what was measured and what it cost.
 
-**Spend.** 177 sandboxes have been created across the whole project. The latest
-run of each gate sums to **$0.05465**, and two archived earlier runs add
-**$0.01653**. Snapshot builds report their cost to their own run log and are not
-in that figure.
+<p align="center">
+  <img src="docs/art/receipt.svg" alt="Session receipt: 10 minutes at $0.057 per hour is $0.0095" width="55%">
+</p>
+
+**Spend.** The ledger records **812 sandboxes** created across the whole project,
+and none of them are still live: 330 for soak runs, 247 for the canary, 167 for
+the gates, 50 real launches and 37 snapshot builds. The latest run of each gate
+sums to **$0.05465**, and two archived earlier runs add **$0.01653**.
 
 An exact all-time total is **not** reconstructible from what is recorded, and
-that is a gap rather than an omission: `SandboxLedger` writes an open and a close
+that is a gap rather than an omission. `SandboxLedger` writes an open and a close
 per sandbox but never a cost, so the file that knows every sandbox existed cannot
 say what any of them cost. The billing ledger under `src/billing/` is the thing
 that fixes this for the product; the harness ledger predates it. Until then the
-honest statement is the one above: two exact figures for what is recorded, and no
+honest statement is the one above: exact figures for what is recorded, and no
 invented total for what is not.
 
 The order-of-magnitude answer, which is what the number is for, is that the whole
