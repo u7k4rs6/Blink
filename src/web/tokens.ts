@@ -617,9 +617,99 @@ p { margin: 0 0 calc(var(--cell) * 1); }
   background: var(--line); transform-origin: left;
   animation: lineGrowX .9s cubic-bezier(.16, 1, .3, 1) .4s both; }
 
+/*
+ * Everything below is gated on .js-motion, which the motion script sets on the
+ * root element as its first act. Nothing here may be the reason a visitor
+ * cannot read something: with the script absent, thrown, or refused by
+ * prefers-reduced-motion, the class is never set and every rule below is inert.
+ * The page is then exactly what the server sent.
+ */
+
+/*
+ * The ladder runs the launch sequence at its real proportions, compressed 4x.
+ * The fork is long, the health check is a flash you can miss, the fetch is in
+ * between, and that shape is the argument the page makes in words. A rung with
+ * a measured cost gets a bar, because a bar is a length and a length is a
+ * claim; "ten minutes" and "gone" only light.
+ */
+.steps li { position: relative; }
+.steps li::after { content: ""; position: absolute; left: 0; right: calc(var(--cell) * 1.5);
+  bottom: 0; height: 2px; background: var(--ink); transform: scaleX(0); transform-origin: left; }
+.js-motion .steps[data-run] li,
+.js-motion .steps[data-run] li::before { color: var(--muted); }
+.js-motion .steps[data-run] li { animation: rungLight 1ms linear var(--d) forwards; }
+.js-motion .steps[data-run] li[data-measured="1"]::after {
+  animation: rungRun var(--t) linear var(--d) both; }
+@keyframes rungLight { to { color: var(--ink); } }
+@keyframes rungRun {
+  0% { transform: scaleX(0); transform-origin: left; }
+  72% { transform: scaleX(1); transform-origin: left; }
+  73% { transform: scaleX(1); transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; }
+}
+
+/*
+ * A rule draws itself when its section first arrives. An ink line sweeps the
+ * width and dissolves into the hairline that was already there, so the page
+ * assembles along its own grid rather than sliding in from underneath itself.
+ */
+.js-motion [data-reveal-on-scroll] { position: relative; }
+.js-motion [data-reveal-on-scroll]::before { content: ""; position: absolute; z-index: 4;
+  left: 0; right: 0; top: -1px; height: 1px; background: var(--ink);
+  transform: scaleX(0); transform-origin: left; pointer-events: none; }
+.js-motion [data-reveal-on-scroll][data-in="1"]::before {
+  animation: ruleSweep .8s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes ruleSweep {
+  0% { transform: scaleX(0); opacity: 1; }
+  62% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+/*
+ * The canary record is a time series, oldest cell first, so it wipes in along
+ * time. steps(24) rather than a smooth reveal, because the cells are discrete
+ * and so are the checks.
+ *
+ * It runs on load rather than on arrival, and the clipped state lives in the
+ * keyframe rather than in a resting rule. Both of those are the same lesson.
+ * The first version clipped .field to zero width in a resting rule and undid it
+ * from an ancestor's scroll reveal, so any jump past that ancestor (an anchor,
+ * a restored scroll position, ctrl+End, find-in-page) left the record clipped
+ * to nothing for good. A reveal that has not fired must look like a reveal that
+ * was never asked for, never like content that is missing.
+ */
+.js-motion .field { animation: fieldWipe 1s steps(24) .35s both; }
+@keyframes fieldWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/*
+ * The gauge grows to the width the server rendered. A bar may move where the
+ * numeral beside it may not: a bar cannot display a wrong figure on the way,
+ * it can only be shorter than the truth, and it ends on the truth.
+ */
+.js-motion .gauge > i { transition: width .9s cubic-bezier(.16, 1, .3, 1) .15s; }
+
+/*
+ * A healthy card's square pulses twice as the card arrives. A failing card's
+ * does not, so the motion carries the verdict rather than decorating it.
+ */
+.js-motion .card[data-in="1"] .shot-state .ok .dot { animation: dotPulse 1.1s ease-out 2 .2s; }
+@keyframes dotPulse {
+  0% { box-shadow: 0 0 0 0 var(--alive); }
+  70% { box-shadow: 0 0 0 7px rgba(216, 255, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(216, 255, 0, 0); }
+}
+
+/* The one hover that moves: the command's arrow leaves, the way it says it will. */
+.btn-launch .arrow { transition: transform .16s cubic-bezier(.16, 1, .3, 1); }
+.btn-launch:hover:not(:disabled) .arrow { transform: translate(3px, -3px); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .hero h1 span > span { transform: none; }
+  /* Belt as well as braces: the script does not set .js-motion here, so none
+   * of the gated rules apply, and these are the two that hide something even
+   * without an animation to play. */
+  .steps li::after { display: none; }
 }
 
 @media (max-width: 720px) {

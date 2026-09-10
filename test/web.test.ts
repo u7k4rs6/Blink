@@ -439,6 +439,81 @@ test("a soak strip says so, instead of looking like the canary's verdict", () =>
   assert.ok(!/earlier run/.test(canaryRow), "canary rows must not be labelled as soak");
 });
 
+// ---------------------------------------------------------------------------
+// Motion
+// ---------------------------------------------------------------------------
+
+test("the ladder runs at the measured proportions, and claims no length it did not measure", async () => {
+  const { LADDER, LADDER_COMPRESS, ladderTiming } = await import("../src/web/motion.ts");
+  const t = ladderTiming();
+  assert.equal(t.length, LADDER.length);
+
+  // Each rung starts where the last one ended. A gap or an overlap would make
+  // the sequence say something about the launch path that is not true.
+  let at = 0;
+  for (let i = 0; i < t.length; i++) {
+    assert.equal(t[i]!.delay, at, `rung ${i} does not start where rung ${i - 1} ended`);
+    at += t[i]!.dur;
+  }
+
+  // The whole point is that the SHAPE survives compression: the fork is long,
+  // the health check is a flash you can miss, the fetch is in between. If the
+  // ratios were not preserved the animation would be decoration wearing a
+  // measurement's clothes.
+  const fork = LADDER.find((x) => x.label === "fork")!.ms!;
+  const health = LADDER.find((x) => x.label === "health check")!.ms!;
+  assert.equal(t[0]!.dur, Math.round(fork / LADDER_COMPRESS));
+  assert.equal(t[1]!.dur, Math.round(health / LADDER_COMPRESS));
+  assert.ok(t[0]!.dur > t[1]!.dur * 8, "the fork must still dwarf the health check");
+
+  // A bar is a length and a length is a claim, so only measured rungs get one.
+  for (let i = 0; i < LADDER.length; i++) {
+    assert.equal(t[i]!.measured, LADDER[i]!.ms !== null,
+      `${LADDER[i]!.label} draws a bar for a duration nobody measured`);
+  }
+  const html = renderCatalog(board, [app()]);
+  assert.match(html, /data-n="02" data-measured="1" title="measured at about 281 ms"/);
+  assert.match(html, /data-n="05" data-measured="0" style=/, "gone is not a measurement");
+});
+
+test("no reveal may be the reason something is not on the page", async () => {
+  /*
+   * The first version clipped the canary record to zero width in a RESTING rule
+   * and undid it from an ancestor's scroll reveal. Any jump past that ancestor
+   * (an anchor, a restored scroll position, ctrl+End, find-in-page) left the
+   * record clipped to nothing permanently, and a jump to the bottom of the page
+   * left seven of eight reveals unfired.
+   *
+   * The rule this encodes: a hidden state belongs in a keyframe, never in a
+   * resting rule. A reveal that never fires then looks like a reveal nobody
+   * asked for, rather than like content that is missing. It is the same shape
+   * as a control that passes its own test and cannot fire, except here the
+   * thing that cannot fire is the only thing making the page visible.
+   */
+  const { MOTION_SCRIPT } = await import("../src/web/motion.ts");
+
+  // Split the sheet into keyframe blocks and everything else, then look for a
+  // hiding declaration outside a keyframe.
+  const withoutKeyframes = CSS.replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, "");
+  for (const bad of [/clip-path:\s*inset\([^)]*100%/, /\bvisibility:\s*hidden/, /\bopacity:\s*0\b(?![.\d])/]) {
+    const hit = bad.exec(withoutKeyframes);
+    assert.equal(hit, null,
+      `a resting rule hides content: ${JSON.stringify(hit?.[0])}. Put it in a keyframe.`);
+  }
+
+  // And the gate is set by the script itself, so no JavaScript means no gate,
+  // which means every rule that could hide something is inert.
+  assert.match(MOTION_SCRIPT, /js-motion/);
+  assert.ok(
+    MOTION_SCRIPT.indexOf("prefers-reduced-motion") < MOTION_SCRIPT.indexOf("js-motion"),
+    "reduced motion has to return BEFORE the gate is set, or it gates nothing",
+  );
+  assert.match(MOTION_SCRIPT, /if \(!\("IntersectionObserver" in window\)\)[\s\S]{0,200}forEach\(play\)/,
+    "no observer must mean show everything, never show nothing");
+  assert.match(CSS, /\.js-motion \[data-reveal-on-scroll\]/,
+    "every reveal rule has to sit behind the gate");
+});
+
 test("the type scale is the only source of a font size", async () => {
   /*
    * The catalog carried five body sizes inside seven pixels of each other

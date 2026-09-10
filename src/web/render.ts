@@ -8,6 +8,7 @@
 
 import { CSS, FONT_LINK } from "./tokens.ts";
 import { PIXELS_SCRIPT } from "./pixels.ts";
+import { LADDER, ladderTiming, MOTION_SCRIPT } from "./motion.ts";
 import { receiptRows, type Receipt } from "./receipt.ts";
 import { pillsFor, type TimelineInput } from "./launch-timeline.ts";
 
@@ -76,7 +77,8 @@ ${opts.noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 ${FONT_LINK}
 <style>${CSS}</style>
 </head><body>${body}
-<script>${PIXELS_SCRIPT}</script></body></html>`;
+<script>${PIXELS_SCRIPT}</script>
+<script>${MOTION_SCRIPT}</script></body></html>`;
 }
 
 function boardCell(label: string, value: string, extra = ""): string {
@@ -111,7 +113,7 @@ ${boardCell(
     `<div class="cell-label gauge-cap">of $${b.creditsCapUsd.toFixed(2)} cap</div>`,
 )}
 </div>
-<div class="board-note">
+<div class="board-note" data-reveal-on-scroll>
   <div>
     <div class="label"><span class="staledot" data-stale="${stale}" title="last updated ${esc(b.staleSeconds)}s ago"></span>${
       stale === "1" ? "readout stale, last update " + esc(b.staleSeconds) + "s ago" : "live readout"
@@ -147,7 +149,7 @@ function card(app: App, launchesOff = false): string {
     ? `<button class="btn btn-launch" disabled data-permanently-off="1">Launch unavailable</button>`
     : `<div class="launch"><span class="slots">${slots} / ${slots} slots free</span>` +
       `<button class="btn btn-launch" data-launch="${esc(app.id)}">Launch <span class="arrow" aria-hidden="true">&#8599;</span></button></div>`;
-  return `<article class="card" data-app="${esc(app.id)}">
+  return `<article class="card" data-app="${esc(app.id)}" data-reveal-on-scroll>
 ${shot}
 <div class="card-body">
   <div class="card-title"><h2>${esc(app.name)}</h2><span class="cat">${esc(app.category)}</span></div>
@@ -388,12 +390,13 @@ function hero(): string {
     <h1><span><span>Press launch.</span></span><span><span>Get a real machine.</span></span></h1>
     <p class="lede">An open source app, seeded and running, yours alone.
     Gone in ten minutes.</p>
-    <ol class="steps" aria-label="What happens when you press launch">
-      <li data-n="01">fork</li>
-      <li data-n="02">health check</li>
-      <li data-n="03">url</li>
-      <li data-n="04">ten minutes</li>
-      <li data-n="05">gone</li>
+    <ol class="steps" data-run="1" aria-label="What happens when you press launch">
+${LADDER.map((step, i) => {
+  const t = ladderTiming()[i]!;
+  return `      <li data-n="${step.n}" data-measured="${t.measured ? "1" : "0"}"` +
+    `${step.ms === null ? "" : ` title="measured at about ${step.ms} ms"`}` +
+    ` style="--d:${t.delay}ms;--t:${t.dur}ms">${step.label}</li>`;
+}).join("\n")}
     </ol>
     <a class="kick" href="#pick">Pick one</a>
   </div>
@@ -421,7 +424,7 @@ ${renderBoard(board, canaryHistory)}
   ${launchesOff ? `<p class="warn t-body" style="max-width:52ch;margin:0 0 calc(var(--cell) * 2)">
     <strong>Launches are paused.</strong> ${esc(launchesOff)}
   </p>` : ""}
-  ${turnstileSiteKey ? `<div class="verify">
+  ${turnstileSiteKey ? `<div class="verify" data-reveal-on-scroll>
     <div id="ts-widget" class="cf-turnstile"
          data-sitekey="${esc(turnstileSiteKey)}"
          data-callback="blinkTurnstileOk"
@@ -441,7 +444,7 @@ ${renderBoard(board, canaryHistory)}
 
   <div class="cards">${apps.map((a) => card(a, launchesOff !== undefined)).join("\n")}</div>
 </main>
-<footer class="foot">
+<footer class="foot" data-reveal-on-scroll>
   <span><a href="/health">Health wall</a> &middot; every check names what it asked</span>
   <span>runs from a laptop &middot; up while it is on</span>
 </footer>
