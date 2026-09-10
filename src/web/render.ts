@@ -88,8 +88,10 @@ function boardCell(label: string, value: string, extra = ""): string {
    * the data is the visual, so the type has to know when there is no datum.
    */
   const isNumber = /^[$\d]/.test(value);
-  return `<div><div class="cell-label">${esc(label)}</div>` +
-    `<div class="cell-value${isNumber ? "" : " cell-none"}">${esc(value)}</div>${extra}</div>`;
+  // Value first, label under it. The number is the visual; the label only says
+  // which one it is, which is the order a readout on an instrument has.
+  return `<div><div class="cell-value${isNumber ? "" : " cell-none"}">${esc(value)}</div>` +
+    `<div class="cell-label">${esc(label)}</div>${extra}</div>`;
 }
 
 export function renderBoard(b: Board, canaryHistory: Array<boolean | null> = []): string {
@@ -108,41 +110,55 @@ ${boardCell(
   `<div class="gauge"><i style="width:${pct.toFixed(1)}%"></i></div>`,
 )}
 </div>
-<div style="margin-top:8px;font-size:12px" class="muted">
-<span class="staledot" data-stale="${stale}" title="last updated ${esc(b.staleSeconds)}s ago"></span>
-Credit figure is an estimate computed locally from published rates, not a bill from Solari.
+<div class="board-note">
+  <div>
+    <div class="label"><span class="staledot" data-stale="${stale}" title="last updated ${esc(b.staleSeconds)}s ago"></span>${
+      stale === "1" ? "readout stale, last update " + esc(b.staleSeconds) + "s ago" : "live readout"
+    }</div>
+    <div class="muted">Every number here is measured. The credit figure is the one estimate: computed locally from published rates, not a bill from Solari.</div>
+  </div>
+  ${canaryHistory.length > 0 ? heroField(canaryHistory) : ""}
 </div>
-${canaryHistory.length > 0 ? heroField(canaryHistory) : ""}
 </div></div>`;
 }
 
 function card(app: App, launchesOff = false): string {
   const down = !app.canary.ok;
   const slots = 2;
-  const shot = app.shotUrl
-    ? `<img class="shot" src="${esc(app.shotUrl)}" alt="A real screenshot of ${esc(app.name)} taken by the canary">
-       <div class="shot-cap">canary screenshot ${esc(app.shotAt ?? "")}</div>`
-    : `<div class="shot" role="img" aria-label="No canary screenshot yet"></div>
-       <div class="shot-cap">no canary screenshot yet</div>`;
-  const button = launchesOff
-    ? `<button class="btn" disabled data-permanently-off="1">Launches paused</button>`
+  const health = app.lastForkMs === null
+    ? `<span class="shot-cap">no health data</span>`
     : down
-    ? `<button class="btn" disabled data-permanently-off="1">Launch unavailable</button>`
-    : `<button class="btn" data-launch="${esc(app.id)}">Launch <span class="slots">&middot; ${slots} of ${slots} slots free</span></button>`;
+    ? `<span class="fail"><span class="dot" data-s="fail"></span>down</span>`
+    : `<span class="ok"><span class="dot"></span>healthy &middot; ${(app.lastForkMs / 1000).toFixed(2)}s</span>`;
+  /*
+   * The screenshot is a window into the running app, so its state bar says two
+   * things and nothing else: is the thing in the picture alive right now, and
+   * when was the picture taken.
+   */
+  const shot = app.shotUrl
+    ? `<div class="shot-wrap"><img class="shot" src="${esc(app.shotUrl)}" alt="A real screenshot of ${esc(app.name)} taken by the canary">
+       <div class="shot-state">${health}<span class="shot-cap">canary screenshot ${esc(app.shotAt ?? "")}</span></div></div>`
+    : `<div class="shot-wrap"><div class="shot" role="img" aria-label="No canary screenshot yet"></div>
+       <div class="shot-state">${health}<span class="shot-cap">no canary screenshot yet</span></div></div>`;
+  const button = launchesOff
+    ? `<button class="btn btn-launch" disabled data-permanently-off="1">Launches paused</button>`
+    : down
+    ? `<button class="btn btn-launch" disabled data-permanently-off="1">Launch unavailable</button>`
+    : `<div class="launch"><span class="slots">${slots} / ${slots} slots free</span>` +
+      `<button class="btn btn-launch" data-launch="${esc(app.id)}">Launch <span class="arrow" aria-hidden="true">&#8599;</span></button></div>`;
   return `<article class="card" data-app="${esc(app.id)}">
 ${shot}
 <div class="card-body">
-  <div class="card-title"><h2>${esc(app.name)}</h2><span class="chip">${esc(app.category)}</span></div>
-  <p class="muted" style="margin:0;font-size:14px">${esc(app.description)}</p>
+  <div class="card-title"><h2>${esc(app.name)}</h2><span class="cat">${esc(app.category)}</span></div>
+  <p class="desc">${esc(app.description)}</p>
   <ol class="try">${app.tryFirst.map((t) => `<li>${esc(t)}</li>`).join("")}</ol>
-  ${app.credentials ? `<div class="label" style="margin-top:calc(var(--cell) * -0.5)">
+  ${app.credentials ? `<div class="label creds">
     signs you in with ${esc(app.credentials.user)} / ${esc(app.credentials.password)}
   </div>` : ""}
   ${down ? `<p class="fail" style="margin:0;font-size:13px">Down since ${esc(app.canary.downSince ?? "recently")}. <a href="/health">See the health wall</a></p>` : ""}
   <div class="card-foot">
-    <span>${esc(app.license)}</span>
-    <a href="${esc(app.upstream)}" rel="noopener">upstream</a>
-    <span class="mono">${app.lastForkMs === null ? "no health data" : `health check ${(app.lastForkMs / 1000).toFixed(2)}s`}</span>
+    <span>${esc(app.license)}</span><span class="sep">&middot;</span>
+    <a href="${esc(app.upstream)}" rel="noopener">upstream &#8599;</a>
   </div>
   <div data-panel="${esc(app.id)}">${button}</div>
 </div></article>`;
@@ -328,6 +344,7 @@ export const SOURCE_URL = process.env.BLINK_SOURCE_URL ?? "https://github.com/u7
 function masthead(): string {
   return `<header class="masthead">
   <a class="brand" href="/">Blink</a>
+  <span class="sys">disposable machines &middot; ten minutes each</span>
   <nav>
     <a href="/health">Health wall</a>
     <a href="${esc(SOURCE_URL)}" rel="noopener">Source</a>
@@ -353,8 +370,10 @@ function heroField(history: Array<boolean | null>): string {
     .join("");
   const passed = history.filter((h) => h === true).length;
   const ran = history.filter((h) => h !== null).length;
-  return `<div>
-  <div class="label">${
+  return `<div class="canary">
+  <div class="label"><span class="dot" data-s="${
+    ran === 0 ? "off" : passed === ran ? "on" : "fail"
+  }"></span>${
     ran === 0 ? "canary record, nothing checked yet" : `canary record, ${passed} of ${ran} checks passed`
   }</div>
   <div class="field" role="img" aria-label="${
@@ -363,11 +382,19 @@ function heroField(history: Array<boolean | null>): string {
 }
 
 function hero(): string {
-  return `<section class="hero" data-ambient="up" data-ambient-below=".lede">
+  return `<section class="hero" data-ambient="up" data-ambient-below=".kick">
   <div class="wrap">
     <h1><span><span>Press launch.</span></span><span><span>Get a real machine.</span></span></h1>
     <p class="lede">An open source app, seeded and running, yours alone.
     Gone in ten minutes.</p>
+    <ol class="steps" aria-label="What happens when you press launch">
+      <li data-n="01">fork</li>
+      <li data-n="02">health check</li>
+      <li data-n="03">url</li>
+      <li data-n="04">ten minutes</li>
+      <li data-n="05">gone</li>
+    </ol>
+    <a class="kick" href="#pick">Pick one</a>
   </div>
 </section>`;
 }
@@ -384,24 +411,27 @@ export function renderCatalog(
 ${hero()}
 ${renderBoard(board, canaryHistory)}
 <main class="wrap">
-  <h2 style="margin:calc(var(--cell) * 4) 0 var(--cell)">Pick one.</h2>
-  <p class="muted" style="margin:0;max-width:44ch;font-size:19px">
-    Every number on this page is measured. The credit figure is the one estimate, and it says so.
+  <div class="pick" id="pick">
+  <h2>Pick one.</h2>
+  <p class="sub">
+    Real upstream builds, already seeded with something to look at. Blink brings the machine.
   </p>
+  </div>
   ${launchesOff ? `<p class="warn" style="max-width:52ch;font-size:17px;margin:0 0 calc(var(--cell) * 2)">
     <strong>Launches are paused.</strong> ${esc(launchesOff)}
   </p>` : ""}
-  ${turnstileSiteKey ? `<div style="margin:calc(var(--cell) * 2) 0 calc(var(--cell) * 3)">
+  ${turnstileSiteKey ? `<div class="verify">
     <div id="ts-widget" class="cf-turnstile"
          data-sitekey="${esc(turnstileSiteKey)}"
          data-callback="blinkTurnstileOk"
          data-error-callback="blinkTurnstileErr"
          data-expired-callback="blinkTurnstileErr"
          data-theme="light"></div>
-    <p class="muted" style="font-size:15px;max-width:46ch">
-      One check, once. A real machine with open outbound network is worth standing in front of.
-    </p>
-    <p id="ts-state" class="label" data-state="pending" style="margin-top:6px">checking you are a person</p>
+    <div>
+      <div class="label">verification</div>
+      <p class="muted">One check, once. A real machine with open outbound network is worth standing in front of.</p>
+      <p id="ts-state" class="label" data-state="pending">checking you are a person</p>
+    </div>
   </div>` : `<p class="warn" style="font-size:13px;max-width:62ch">
     Bot verification is disabled on this instance. Every launch spends real money on a
     machine with unrestricted outbound network, so this is a development setting and
@@ -410,8 +440,9 @@ ${renderBoard(board, canaryHistory)}
 
   <div class="cards">${apps.map((a) => card(a, launchesOff !== undefined)).join("\n")}</div>
 </main>
-<footer class="wrap muted" style="font-size:12px;padding:40px 16px">
-  <a href="/health">Health wall</a> &middot; every check names what it asked.
+<footer class="foot">
+  <span><a href="/health">Health wall</a> &middot; every check names what it asked</span>
+  <span>runs from a laptop &middot; up while it is on</span>
 </footer>
 ${turnstileSiteKey ? `<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>` : ""}
 <script>

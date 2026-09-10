@@ -72,7 +72,13 @@ export const PIXEL = {
 export const CELL = 14;
 export const GUTTER = 56;
 export const MAX_WIDTH = 1176;
-export const RADIUS = 26;
+/**
+ * Zero. The reference site's 26px radius was copied along with its grid, and
+ * the two fight: a grid is a system of right angles, and a rounded card sits on
+ * it like a sticker. Every surface is now a rectangle cut by hairlines, which
+ * is what lets the page read as one instrument rather than as tiles.
+ */
+export const RADIUS = 0;
 export const READ_WIDTH = "34ch";
 
 /** 14, 28, 42, 56, 84, 112. Every one a multiple of the cell. */
@@ -129,8 +135,16 @@ export const CSS = `
   --navy: ${PIXEL.navy};
   --red: ${PIXEL.red};
 
-  --line: rgba(10, 10, 10, .12);
+  /*
+   * The one state colour. Neon is a FILL: it marks a thing that is alive (a
+   * healthy card, a fresh board, a step that has completed, a button under the
+   * cursor) and it is never text, because at 1.15:1 it cannot be.
+   */
+  --alive: var(--neon);
+
+  --line: rgba(10, 10, 10, .14);
   --line-2: rgba(10, 10, 10, .06);
+  --line-3: rgba(10, 10, 10, .035);
 
   --cell: ${CELL}px;
   --gutter: ${GUTTER}px;
@@ -160,22 +174,26 @@ export const CSS = `
 body > *:not(.pixfield) { position: relative; z-index: 1; }
 
 /*
- * The graph paper. One background-image, two gradients, drawn at the cell size
- * so it lines up with every margin on the page. It is fixed rather than scrolled
- * because a grid that moves reads as texture and a grid that stays reads as
- * paper, which is the whole effect.
+ * The graph paper, at three intensities.
+ *
+ * The body carries the faintest grid, for alignment. The hero carries none of
+ * its own, so the pixel field is the only thing moving there. A card under the
+ * cursor draws the grid one step stronger inside its own border, which is the
+ * only place the grid is allowed to answer the visitor. Fixed rather than
+ * scrolled, because a grid that moves reads as texture and a grid that stays
+ * reads as paper.
  */
 body {
   margin: 0;
   background-color: var(--paper);
   background-image:
-    linear-gradient(to right, var(--line-2) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--line-2) 1px, transparent 1px);
+    linear-gradient(to right, var(--line-3) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line-3) 1px, transparent 1px);
   background-size: var(--cell) var(--cell);
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font);
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.5;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -188,19 +206,14 @@ a:hover, a:focus-visible { border-bottom-color: var(--ink); }
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
 
 /*
- * Micro labels. Monospace, 10px, uppercase, wide tracking. Every measurement on
- * the page is introduced by one of these, which is what lets the numbers
- * themselves be set large and unadorned.
- */
-/*
  * Micro labels: monospace, uppercase, wide tracking. Every measurement on the
  * page is introduced by one of these, which is what lets the numbers themselves
  * be set large and unadorned.
  */
-.label, .cell-label, .shot-cap, .chip, .slots, .kick {
+.label, .cell-label, .shot-cap, .chip, .slots, .kick, .cat, .steps, .card-foot, .sys, .foot {
   font-family: var(--mono);
   font-size: 10px;
-  letter-spacing: .1em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -219,12 +232,12 @@ a:hover, a:focus-visible { border-bottom-color: var(--ink); }
   font-variant-numeric: tabular-nums;
 }
 
-h1, h2, h3 { font-weight: 700; letter-spacing: -.03em; line-height: 1.02; margin: 0; }
 /*
- * Sized so each hero line fits on one line at the top of its range. The first
- * pass used clamp(38px, 7vw, 96px) with a 13ch measure and broke a two line
- * headline into five, which is the one thing a display face must not do.
+ * Two registers of type. Statement type is the display face, large and tight.
+ * Instrument type is monospace, small, tracked. Nothing on the page is set in
+ * between, and that gap is most of the hierarchy.
  */
+h1, h2, h3 { font-weight: 700; letter-spacing: -.03em; line-height: 1.02; margin: 0; }
 h1 { font-size: clamp(40px, 6.4vw, 88px); letter-spacing: -.04em; }
 h2 { font-size: clamp(28px, 3.4vw, 46px); }
 p { margin: 0 0 calc(var(--cell) * 1); }
@@ -234,12 +247,22 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 .warn { color: var(--warn); }
 .ok { color: var(--accent); }
 
+/*
+ * The alive mark. A filled square, one cell of the grid, set in the state
+ * colour. It is the only accent the page has and it appears only where
+ * something is genuinely running, passing or ready.
+ */
+.dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px;
+  background: var(--alive); vertical-align: 1px; outline: 1px solid rgba(10, 10, 10, .18); }
+.dot[data-s="off"], .dot[data-stale="1"] { background: transparent; outline-color: var(--line); }
+.dot[data-s="fail"] { background: var(--red); outline-color: transparent; }
+
 /* ------------------------------------------------------------------ masthead */
 
 .masthead {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: calc(var(--cell) * 2);
   padding: calc(var(--cell) * 1) var(--gutter);
@@ -248,110 +271,194 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 .masthead .brand {
   font-family: var(--mono);
   font-size: 12px;
-  letter-spacing: .18em;
+  letter-spacing: .22em;
   text-transform: uppercase;
   border: 0;
 }
-.masthead nav { display: flex; gap: calc(var(--cell) * 2); }
+.masthead .sys { letter-spacing: .1em; }
+.masthead nav { display: flex; gap: calc(var(--cell) * 2); justify-self: end; }
 .masthead nav a { border: 0; font-family: var(--mono); font-size: 10px;
-  letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .masthead nav a:hover { color: var(--ink); }
 
 /* ---------------------------------------------------------------------- hero */
 
 .hero { position: relative; border-bottom: 1px solid var(--line); }
-.hero .wrap { padding-top: calc(var(--cell) * 4); padding-bottom: calc(var(--cell) * 19); }
+.hero .wrap { padding-top: calc(var(--cell) * 5); padding-bottom: calc(var(--cell) * 13); }
 .hero h1 { max-width: 100%; }
 .hero .lede { max-width: 34ch; margin: calc(var(--cell) * 2) 0 0; color: var(--muted);
   font-size: 21px; line-height: 1.35; }
 
-
 /*
- * The hero field is drawn from real canary history, not from noise. Each cell is
- * one check: ink for a pass, red for a fail, faint for a slot no canary has
- * reached yet. It is the one ornament on the page and it is made of data, which
- * is the only reason it is allowed to be this large.
+ * The provisioning ladder. Five steps, one hairline each, set as instrument
+ * text under the statement: what happens between the button and the browser.
+ * It is the whole product in one row, and it is the same five words the
+ * launch panel later lights up one at a time.
  */
-/* Sits with the board, because it is a measurement and not decoration. It was
- * in the hero, where the ambient cloud now is, and a grid of faint grey cells
- * over a drifting colour field is neither of those things clearly. */
-.field { margin-top: calc(var(--cell) * 2.5); display: grid; grid-auto-flow: column; grid-auto-columns: var(--cell);
-  grid-template-rows: repeat(4, var(--cell)); gap: 2px; justify-content: start;
-  overflow: hidden; }
-.field i { width: var(--cell); height: var(--cell); display: block; background: var(--line-2); }
-.field i[data-s="ok"] { background: var(--ink); }
-.field i[data-s="fail"] { background: var(--red); }
-.field i[data-s="idle"] { background: rgba(10, 10, 10, .05); }
+.steps { display: flex; flex-wrap: wrap; margin: calc(var(--cell) * 3) 0 0;
+  padding: 0; list-style: none; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  max-width: 640px; }
+.steps li { display: flex; align-items: baseline; gap: 10px; padding: 10px calc(var(--cell) * 1.5) 10px 0;
+  margin-right: calc(var(--cell) * 1.5); border-top: 1px solid transparent; color: var(--ink); }
+.steps li::before { content: attr(data-n); color: var(--muted); }
+.steps li:last-child { color: var(--muted); }
+.kick { display: inline-flex; align-items: center; gap: 10px; margin-top: calc(var(--cell) * 3);
+  color: var(--ink); border: 0; }
+.kick::after { content: ""; width: 8px; height: 8px; background: var(--ink); }
+.kick:hover::after { background: var(--alive); outline: 1px solid var(--ink); }
 
 /* --------------------------------------------------------------------- board */
 
 /*
- * A paper backdrop under the board, because the pixel field passes beneath it.
- * A measurement that is only legible when the cursor is somewhere else is not a
- * measurement anybody can read.
+ * The instrument panel. A number, then its label underneath, one hairline
+ * between each cell and one above and below the row. The number is the visual;
+ * the label only says which one it is.
+ *
+ * A paper backdrop, because the pixel field passes beneath it and a measurement
+ * that is only legible when the cursor is somewhere else is not a measurement
+ * anybody can read.
  */
 .board { border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, .82);
+  background: rgba(255, 255, 255, .86);
   -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
-.board .wrap { padding: calc(var(--cell) * 2) var(--gutter); }
-.board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: calc(var(--cell) * 2); }
-.cell-label { margin: 0 0 6px; }
-.cell-value { font-size: clamp(26px, 2.8vw, 40px); font-weight: 700; white-space: nowrap; line-height: 1; letter-spacing: -.02em;
-  font-variant-numeric: tabular-nums; }
+.board .wrap { padding: 0 var(--gutter); }
+.board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  border-left: 1px solid var(--line); }
+.board-grid > div { padding: calc(var(--cell) * 2) calc(var(--cell) * 1.5) calc(var(--cell) * 1.5);
+  border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+.cell-value { order: 0; font-size: clamp(36px, 4.2vw, 60px); font-weight: 500; white-space: nowrap;
+  line-height: 1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
 .cell-value.cell-none { font-size: 15px; letter-spacing: 0; color: var(--muted);
-  line-height: 1.4; padding-top: 6px; }
-.gauge { margin-top: 10px; height: 6px; background: var(--line-2); }
+  line-height: 1.4; padding: 10px 0 8px; }
+.cell-label { order: 1; margin: 12px 0 0; }
+.gauge { order: 2; margin-top: 12px; height: 4px; background: var(--line-2); }
 .gauge i { display: block; height: 100%; background: var(--ink); }
-.staledot { display: inline-block; width: 7px; height: 7px; margin-right: 6px;
-  background: var(--accent); vertical-align: middle; }
-.staledot[data-stale="1"] { background: var(--muted); }
+.staledot { display: inline-block; width: 8px; height: 8px; margin-right: 8px;
+  background: var(--alive); vertical-align: 1px; outline: 1px solid rgba(10, 10, 10, .18); }
+.staledot[data-stale="1"] { background: transparent; outline-color: var(--line); }
+
+/* The verification signal. Quieter than the panel above it on purpose. */
+.board-note { display: grid; grid-template-columns: 1fr auto; gap: calc(var(--cell) * 2);
+  align-items: end; padding: calc(var(--cell) * 1.25) 0 calc(var(--cell) * 1.5);
+  border-top: 1px solid var(--line); }
+.board-note .label { color: var(--ink); }
+.board-note .muted { font-size: 12px; margin-top: 6px; max-width: 60ch; }
+.canary { text-align: right; }
+
+/*
+ * The canary record: one cell per check, ink for a pass, red for a fail, faint
+ * for a slot no canary has reached yet. It is drawn from data, which is the only
+ * reason it is allowed to be on the page at all.
+ */
+.field { margin-top: 10px; display: grid; grid-auto-flow: column; grid-auto-columns: 6px;
+  grid-template-rows: repeat(4, 6px); gap: 2px; justify-content: end; overflow: hidden; }
+.field i { width: 6px; height: 6px; display: block; background: var(--line-2); }
+.field i[data-s="ok"] { background: var(--ink); }
+.field i[data-s="fail"] { background: var(--red); }
+.field i[data-s="idle"] { background: rgba(10, 10, 10, .05); }
+
+/* ------------------------------------------------------------------ catalog */
+
+.pick { padding-top: calc(var(--cell) * 6); }
+.pick h2 { margin: 0; }
+.pick .sub { margin: calc(var(--cell) * 1) 0 0; max-width: 46ch; color: var(--muted); font-size: 19px; }
+
+/*
+ * The one check, as a row of the instrument rather than a widget dropped on
+ * the page. Label, widget, state. It sits above the cards because it gates
+ * every button beneath it.
+ */
+.verify { display: grid; grid-template-columns: auto 1fr; gap: calc(var(--cell) * 2);
+  align-items: center; margin: calc(var(--cell) * 3) 0 0; padding: calc(var(--cell) * 1.25) 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.verify .label { color: var(--ink); }
+.verify .muted { font-size: 14px; margin: 0; max-width: 48ch; }
+.verify #ts-state { margin-top: 6px; }
+.verify #ts-state[data-state="ok"]::before { content: ""; display: inline-block; width: 8px; height: 8px;
+  background: var(--alive); outline: 1px solid rgba(10,10,10,.18); margin-right: 8px; vertical-align: 1px; }
 
 /* --------------------------------------------------------------------- cards */
 
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: calc(var(--cell) * 3); padding: calc(var(--cell) * 4) 0; }
+  gap: calc(var(--cell) * 2); padding: calc(var(--cell) * 3) 0 calc(var(--cell) * 6); }
+
 /*
- * Translucent, so the pixel field shows through rather than being hidden.
- *
- * The field is a fixed canvas behind the page, and an opaque card paints over
- * it: the cursor could be an arrow pointing at a card's own title and none of
- * it was visible, because the card was in the way. Same treatment as the board,
- * for the same reason, and the blur keeps the body text readable over whatever
- * colour is passing underneath.
+ * A card is a rectangle of paper cut by hairlines: screenshot, identity, why,
+ * launch, in that order and in that weight. Translucent, so the pixel field
+ * shows through rather than being hidden by it, and the blur keeps the body
+ * text readable over whatever colour is passing underneath.
  */
-.card { display: flex; flex-direction: column;
-  background: rgba(255, 255, 255, .84);
+.card { position: relative; display: flex; flex-direction: column;
+  background: rgba(255, 255, 255, .86);
   -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-  border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.card:hover { border-color: rgba(10, 10, 10, .3); }
+  border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  transition: border-color .15s ease; }
+.card:hover { border-color: var(--ink);
+  background-image:
+    linear-gradient(to right, var(--line-2) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line-2) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell); }
 /* The pixelation canvas sits exactly over the screenshot it replaces. */
-.card { position: relative; }
 .pixshot { position: absolute; inset: 0 0 auto 0; width: 100%;
   aspect-ratio: 16 / 10; display: block; z-index: 2; pointer-events: none; }
 
+/*
+ * The screenshot is a window, not an illustration. Edge to edge, one hairline
+ * under it, and a state bar laid over its bottom edge saying whether the thing
+ * in the picture is alive right now and when the picture was taken.
+ */
+.shot-wrap { position: relative; }
 .shot { aspect-ratio: 16 / 10; background: var(--surface); display: block; width: 100%;
   object-fit: cover; object-position: top center; border-bottom: 1px solid var(--line); }
-.shot-cap { padding: 10px calc(var(--cell) * 1.5) 0; }
-.card-body { display: flex; flex-direction: column; gap: var(--cell);
-  padding: var(--cell) calc(var(--cell) * 1.5) calc(var(--cell) * 1.5); }
-.card-title { display: flex; align-items: baseline; justify-content: space-between;
-  gap: var(--cell); }
-.card-title h2 { font-size: 26px; }
-.chip { border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
-.try { margin: 0; padding-left: 1.1em; color: var(--ink); font-size: 16px; }
-.try li { margin: 2px 0; }
-.card-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cell);
-  padding-top: var(--cell); border-top: 1px solid var(--line-2);
-  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--muted); }
+.shot-state { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px var(--cell);
+  padding: 6px calc(var(--cell) * 1); background: rgba(255, 255, 255, .92);
+  border-top: 1px solid var(--line); }
+.shot-state > * { white-space: nowrap; }
+.shot-state .shot-cap { padding: 0; }
+.shot-state .ok, .shot-state .fail { font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; }
+.shot-state .ok { color: var(--ink); }
+
+.card-body { display: flex; flex-direction: column; gap: calc(var(--cell) * 1);
+  padding: calc(var(--cell) * 1.25) calc(var(--cell) * 1.5) calc(var(--cell) * 1.5); }
+.card-title h2 { font-size: 28px; letter-spacing: -.035em; }
+.cat { display: block; margin-top: 4px; }
+.desc { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.45; }
+
+/*
+ * Things to try, numbered as part of the instrument: 01, 02, 03 in the label
+ * face, tight enough to read as one block.
+ */
+.try { margin: 0; padding: 0; list-style: none; counter-reset: try; font-size: 15px; }
+.try li { counter-increment: try; display: grid; grid-template-columns: 28px 1fr; gap: 6px;
+  padding: 5px 0; border-top: 1px solid var(--line-2); }
+.try li:first-child { border-top: 0; }
+.try li::before { content: counter(try, decimal-leading-zero); font-family: var(--mono); font-size: 10px;
+  letter-spacing: .12em; color: var(--muted); padding-top: 4px; }
+
+.creds { display: block; }
+.card-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px;
+  padding-top: calc(var(--cell) * 1); border-top: 1px solid var(--line-2); }
+.card-foot a { border: 0; color: var(--muted); }
+.card-foot a:hover { color: var(--ink); }
+.card-foot .sep { color: var(--line); }
+
+/*
+ * The launch block. Capacity above the button, the button itself a command:
+ * mono, uppercase, full width, one arrow. Under the cursor it turns the state
+ * colour with ink text, which is the machine coming alive before it is asked.
+ */
+.launch { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.launch .slots { color: var(--ink); }
 
 /* ------------------------------------------------------------------- buttons */
 
 .btn {
-  font: inherit; font-size: 17px; font-weight: 500; cursor: pointer;
+  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
   background: var(--ink); color: var(--paper); border: 1px solid var(--ink);
-  border-radius: 999px; padding: 11px 22px; width: 100%;
+  border-radius: var(--radius); padding: 12px 20px; width: 100%;
+  transition: background-color .12s ease, color .12s ease, border-color .12s ease;
 }
 .btn:hover { background: var(--navy); border-color: var(--navy); }
 .btn:disabled { background: transparent; color: var(--muted); border-color: var(--line);
@@ -359,6 +466,13 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
 .btn-ghost:hover { background: var(--surface); border-color: var(--ink); }
 .btn-danger { background: var(--fail); border-color: var(--fail); color: var(--paper); }
+
+.btn-launch { display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+  padding: 14px 18px; }
+.btn-launch:hover:not(:disabled) { background: var(--alive); color: var(--ink); border-color: var(--ink); }
+.btn-launch:disabled { justify-content: center; }
+.btn-launch .arrow { font-size: 14px; letter-spacing: 0; }
 
 /*
  * The one button the site exists for, so it stops looking like the other four.
@@ -371,15 +485,26 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 
 /* -------------------------------------------------------- panels and strips */
 
-.panel { border: 1px solid var(--line); border-radius: var(--radius);
-  padding: calc(var(--cell) * 1.5); display: flex; flex-direction: column; gap: var(--cell); }
-.pills { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
-.pill { font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
-  text-transform: uppercase; border: 1px solid var(--line); border-radius: 999px;
-  padding: 3px 9px; color: var(--muted); }
-.pill[data-on="1"] { border-color: var(--ink); color: var(--ink); }
-.timer { font-size: clamp(28px, 4vw, 52px); line-height: 1; letter-spacing: -.02em;
-  font-variant-numeric: tabular-nums; text-transform: none; color: var(--ink); }
+.panel { border: 1px solid var(--ink); border-radius: var(--radius);
+  padding: calc(var(--cell) * 1.5); display: flex; flex-direction: column; gap: var(--cell);
+  background: rgba(255, 255, 255, .92); }
+
+/*
+ * The state ladder. Each step is a square and a word; a completed step fills
+ * its square with the state colour. The whole progression is visible from the
+ * first frame, so the visitor can see how far there is to go, not just that
+ * something is happening.
+ */
+.pills { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-2); }
+.pill { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 10px;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 7px 0;
+  border-bottom: 1px solid var(--line-2); border-radius: 0; }
+.pill i { width: 8px; height: 8px; display: block; background: transparent;
+  outline: 1px solid var(--line); flex: none; }
+.pill[data-on="1"] { color: var(--ink); }
+.pill[data-on="1"] i { background: var(--alive); outline-color: rgba(10, 10, 10, .18); }
+.timer { font-size: clamp(36px, 4.6vw, 64px); line-height: 1; letter-spacing: -.035em; font-weight: 500;
+  font-family: var(--font); font-variant-numeric: tabular-nums; text-transform: none; color: var(--ink); }
 
 .strip { display: flex; gap: 2px; }
 .strip i { width: 9px; height: 20px; background: var(--line); display: block; }
@@ -393,12 +518,19 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 .receipt { font-family: var(--mono); font-size: 12px; text-transform: none;
   letter-spacing: 0; color: var(--ink); }
 
+/* -------------------------------------------------------------------- footer */
+
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--cell);
+  padding: calc(var(--cell) * 1.5) var(--gutter) calc(var(--cell) * 3); border-top: 1px solid var(--line); }
+.foot a { border: 0; color: var(--ink); }
+
 /* ------------------------------------------------------------------- motion */
 
 /*
- * The reference reveals each display line with a stepped easing, which is what
- * makes the motion read as pixels rather than as a fade. steps(6) is the whole
- * trick: six discrete jumps, no interpolation.
+ * Motion is a state change or it is not here. The two display lines step in,
+ * the hero rule draws itself once, and everything else moves only because the
+ * machine did: a step completing, a number changing, a button under the cursor.
+ * steps(6) is the whole trick: six discrete jumps, no interpolation.
  */
 @keyframes lineGrowX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes heroLine { from { transform: translateY(115%); } to { transform: translateY(0); } }
@@ -417,7 +549,14 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 
 @media (max-width: 720px) {
   :root { --gutter: 20px; }
-  .hero .hgrid, .masthead { grid-template-columns: 1fr; }
-  .field { display: none; }
+  .masthead { grid-template-columns: 1fr auto; }
+  .masthead .sys { display: none; }
+  .hero .wrap { padding-bottom: calc(var(--cell) * 8); }
+  .board-grid { border-left: 0; }
+  .board-grid > div { border-right: 0; border-top: 1px solid var(--line-2); padding-left: 0; }
+  .board-note { grid-template-columns: 1fr; }
+  .canary { text-align: left; }
+  .field { justify-content: start; }
+  .verify { grid-template-columns: 1fr; }
 }
 `;
