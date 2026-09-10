@@ -99,7 +99,7 @@ function boardCell(label: string, value: string, extra = ""): string {
 export function renderBoard(b: Board, canaryHistory: Array<boolean | null> = []): string {
   const pct = b.creditsCapUsd > 0 ? Math.min(100, (b.creditsUsedUsd / b.creditsCapUsd) * 100) : 0;
   const stale = b.staleSeconds > 15 ? "1" : "0";
-  return `<div class="board"><div class="wrap"><div class="board-grid">
+  return `<div class="board"><div class="wrap"><div class="board-grid" data-reveal-on-scroll>
 ${boardCell("Instances running", String(b.instancesRunning))}
 ${boardCell("Launched today", String(b.launchedToday))}
 ${boardCell(
@@ -415,7 +415,7 @@ export function renderCatalog(
 ${hero()}
 ${renderBoard(board, canaryHistory)}
 <main class="wrap">
-  <div class="pick" id="pick">
+  <div class="pick" id="pick" data-ambient="down" data-ambient-below=".sub">
   <h2>Pick one.</h2>
   <p class="sub">
     Real upstream builds, already seeded with something to look at. Blink brings the machine.
@@ -442,9 +442,9 @@ ${renderBoard(board, canaryHistory)}
     not a safe one to run publicly.
   </p>`}
 
-  <div class="cards">${apps.map((a) => card(a, launchesOff !== undefined)).join("\n")}</div>
+  <div class="cards" data-ambient="up">${apps.map((a) => card(a, launchesOff !== undefined)).join("\n")}</div>
 </main>
-<footer class="foot" data-reveal-on-scroll>
+<footer class="foot" data-ambient="up" data-reveal-on-scroll>
   <span><a href="/health">Health wall</a> &middot; every check names what it asked</span>
   <span>runs from a laptop &middot; up while it is on</span>
 </footer>

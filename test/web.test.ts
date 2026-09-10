@@ -476,6 +476,27 @@ test("the ladder runs at the measured proportions, and claims no length it did n
   assert.match(html, /data-n="05" data-measured="0" style=/, "gone is not a measurement");
 });
 
+test("both inline scripts parse, and neither ships an unsubstituted placeholder", async () => {
+  /*
+   * `var RESOLVE = ${"$"}{RESOLVE_FRAMES};` looked like an escape and was not.
+   * It put the literal text ${RESOLVE_FRAMES} into the browser, which is a
+   * syntax error, and a syntax error in an inline script kills every line after
+   * it silently: no console any visitor reads, no failed request, nothing on
+   * the page except motion that quietly does not happen. Typecheck passed,
+   * every other test passed, and the page was broken.
+   *
+   * These scripts are strings on the server and code in the browser, so nothing
+   * else in the toolchain looks at them. This is the only thing that does.
+   */
+  const { MOTION_SCRIPT } = await import("../src/web/motion.ts");
+  const { PIXELS_SCRIPT } = await import("../src/web/pixels.ts");
+  for (const [name, src] of [["motion", MOTION_SCRIPT], ["pixels", PIXELS_SCRIPT]] as const) {
+    assert.doesNotThrow(() => new Function(src), `${name} script does not parse`);
+    const left = src.match(/\$\{[^}]*\}/);
+    assert.equal(left, null, `${name} ships an unsubstituted ${left?.[0]}`);
+  }
+});
+
 test("no reveal may be the reason something is not on the page", async () => {
   /*
    * The first version clipped the canary record to zero width in a RESTING rule

@@ -24,6 +24,8 @@
  *      does not, so the motion itself carries the verdict.
  */
 
+import { PIXELATE_RESOLVE_FRAMES } from "./pixels.ts";
+
 /**
  * The launch sequence, with the measured cost of each step.
  *
@@ -53,6 +55,13 @@ export const LADDER: ReadonlyArray<{ n: string; label: string; ms: number | null
  * argument the page makes in motion, in under two seconds.
  */
 export const LADDER_COMPRESS = 4;
+
+/**
+ * The arrival resolve borrows the hover effect's speed, so the two cannot look
+ * like different ideas. It is imported rather than retyped for the usual
+ * reason: a constant copied is a constant that drifts.
+ */
+export const RESOLVE_FRAMES = PIXELATE_RESOLVE_FRAMES;
 
 /** How long an unmeasured step is held. Marked as arbitrary, because it is. */
 export const LADDER_HOLD_MS = 420;
@@ -92,7 +101,11 @@ export const MOTION_SCRIPT = `
   // already on screen at load is measured in its hidden state and revealed.
   root.className += " js-motion";
 
-  var play = function (el) { el.setAttribute("data-in", "1"); };
+  var play = function (el) {
+    el.setAttribute("data-in", "1");
+    var shot = el.querySelector ? el.querySelector("img.shot") : null;
+    if (shot) resolveShot(shot);
+  };
 
   if (!("IntersectionObserver" in window)) {
     // No observer, no reveal: show everything at once rather than never.
@@ -112,6 +125,11 @@ export const MOTION_SCRIPT = `
 
   // The gauge grows to the width the server rendered, so the animation cannot
   // end anywhere but the true value. Read it first, then start from zero.
+  //
+  // It is also the quietest thing here and will often not move at all, because
+  // a gauge at $0.00 of $20.00 correctly grows from nothing to nothing. That is
+  // the right behaviour and it is worth saying out loud: this one is not the
+  // effect carrying the page.
   document.querySelectorAll(".gauge > i").forEach(function (bar) {
     var to = bar.style.width;
     bar.style.width = "0%";
@@ -119,5 +137,52 @@ export const MOTION_SCRIPT = `
       requestAnimationFrame(function () { bar.style.width = to; });
     });
   });
+
+  /*
+   * A card's screenshot arrives blocky and resolves, once, when the card first
+   * comes into view.
+   *
+   * This is the same picture the hover effect draws in pixels.ts, and it is a
+   * second implementation on purpose. That one is a single cursor-following
+   * job with one canvas, one target and a hold; this one is per card, fires
+   * once, tracks nothing, and several run at the same time when two cards
+   * arrive together. Sharing the machinery would have meant making the hover
+   * path multi-instance, and the resolve speed is the only thing that must not
+   * drift between them, so that is the thing that is imported rather than
+   * retyped.
+   *
+   * It is the effect doing the most work on this page: the screenshot is the
+   * card's whole evidence that the instance is real, and watching it come up
+   * out of blocks is the product's own gesture.
+   */
+  var RESOLVE = ${RESOLVE_FRAMES};
+  function resolveShot(img) {
+    if (!img || !img.complete || !img.naturalWidth || img.dataset.resolved === "1") return;
+    img.dataset.resolved = "1";
+    var w = img.clientWidth, h = img.clientHeight;
+    if (!w || !h) return;
+    var c = document.createElement("canvas");
+    c.className = "pixshot";
+    c.width = w; c.height = h;
+    if (!img.parentNode) return;
+    img.parentNode.insertBefore(c, img.nextSibling);
+    var g = c.getContext("2d");
+    if (!g) { c.remove(); return; }
+    g.imageSmoothingEnabled = false;
+    var level = 1;
+    (function step() {
+      level -= 1 / RESOLVE;
+      if (level <= 0) { if (c.parentNode) c.parentNode.removeChild(c); return; }
+      // Draw the image small, then blow the small copy back up with smoothing
+      // off. A CSS filter cannot do this: it blurs, and blur is not blocks.
+      var small = Math.max(6, Math.round(w / (1 + level * 12)));
+      var smallH = Math.max(4, Math.round(small * h / w));
+      g.clearRect(0, 0, w, h);
+      g.drawImage(img, 0, 0, small, smallH);
+      g.drawImage(c, 0, 0, small, smallH, 0, 0, w, h);
+      requestAnimationFrame(step);
+    })();
+  }
+
 })();
 `;
