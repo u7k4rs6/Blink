@@ -439,18 +439,7 @@ export const PIXELS_SCRIPT = `
       if (bot <= top) continue;
       // "up" grows from the top edge downward instead of rising from the floor,
       // so a band under the footer can hang rather than stand.
-      /*
-       * Per band intensity, because "has a cloud" and "has a cloud as loud as
-       * the hero's" are different questions. The hero and the footer are empty
-       * stretches and can take the full strength. The catalog is not: a band at
-       * full strength there drew straight through five translucent cards and
-       * their screenshots, which is the difference between a background and a
-       * thing in the way.
-       */
-      var mul = parseFloat(el.getAttribute("data-ambient-strength") || "1");
-      if (!(mul > 0)) mul = 1;
-      bands.push({ top: top, bot: bot, mul: mul,
-        flip: el.getAttribute("data-ambient") === "down" });
+      bands.push({ top: top, bot: bot, flip: el.getAttribute("data-ambient") === "down" });
     }
     ambOn = bands.length > 0;
   }
@@ -464,7 +453,7 @@ export const PIXELS_SCRIPT = `
       if (bd.flip) p = 1 - p;
       var f = 0.10 + 0.90 * Math.pow(p, 1.6);
       if (p > 0.92) f *= (1 - p) / 0.08;
-      return f * bd.mul;
+      return f;
     }
     return 0;
   }

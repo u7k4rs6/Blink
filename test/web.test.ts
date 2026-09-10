@@ -476,32 +476,35 @@ test("the ladder runs at the measured proportions, and claims no length it did n
   assert.match(html, /data-n="05" data-measured="0" style=/, "gone is not a measurement");
 });
 
-test("an ambient band declares its own strength, and a missing one is not zero", async () => {
+test("the field fills empty stretches, and never draws behind the catalog", async () => {
   /*
-   * "Has a cloud" and "has a cloud as loud as the hero's" are different
-   * questions, and treating them as one made the bottom of the page unreadable:
-   * the catalog band ran at hero strength straight through five translucent
-   * cards and their screenshots, and the footer band stacked another maximum
-   * directly under it, so the closing third was solid pixels with the footer
-   * text drawn through.
+   * The band system is attribute driven, so reaching for a livelier page below
+   * the fold is one attribute, and that is exactly how it went wrong. A band on
+   * the catalog covered the full page width at hero strength, and the cards are
+   * translucent by design, so the field passed THROUGH five cards and their
+   * screenshots rather than behind them. Turning it down to a scatter did not
+   * fix it either: it was still loose pixels over the content.
    *
-   * The parse has to fail SAFE. `parseFloat` of a missing attribute is NaN, and
-   * a NaN multiplier silently erases the band it was meant to soften, which
-   * would have removed the hero's cloud rather than dimmed it.
+   * A band belongs where there is nothing else, which is the hero above the
+   * fold and the footer below the last card. Anywhere content lives, the field
+   * stays out.
    */
-  const { PIXELS_SCRIPT } = await import("../src/web/pixels.ts");
-  assert.match(PIXELS_SCRIPT, /data-ambient-strength/, "the band reads its own strength");
-  assert.match(PIXELS_SCRIPT, /if \(!\(mul > 0\)\) mul = 1;/,
-    "NaN, zero and negatives must fall back to full strength, never to nothing");
-  assert.match(PIXELS_SCRIPT, /return f \* bd\.mul;/, "and it has to reach the fade");
-
-  // The empty stretches carry a cloud; the catalog carries a quieter one.
   const html = renderCatalog(board, [app()]);
-  assert.match(html, /class="cards" data-ambient="up" data-ambient-strength="0\.3"/);
+  assert.ok(!/class="cards"[^>]*data-ambient/.test(html),
+    "no band may sit behind the cards, at any strength");
+  assert.ok(!/class="pick"[^>]*data-ambient/.test(html));
+  assert.ok(!/data-ambient-strength/.test(html),
+    "nothing sets a strength any more, so nothing should read one");
+
+  // The two that remain, and the reason each one is legible.
+  assert.match(html, /class="hero" data-ambient="up" data-ambient-below="\.kick"/,
+    "the hero's cloud stays out from under the headline");
   assert.match(html, /class="foot" data-ambient="up" data-ambient-below="span"/,
-    "the footer band has to sit below the footer's own words");
-  assert.ok(!/class="foot"[^>]*data-ambient-strength/.test(html),
-    "an empty stretch takes the full strength");
+    "and the footer's stays out from under the footer's own words");
+
+  const { PIXELS_SCRIPT } = await import("../src/web/pixels.ts");
+  assert.ok(!/data-ambient-strength/.test(PIXELS_SCRIPT), "the unused knob is gone");
+  assert.match(PIXELS_SCRIPT, /data-ambient-below/, "the anchor is the part that earns its keep");
 });
 
 test("both inline scripts parse, and neither ships an unsubstituted placeholder", async () => {

@@ -415,7 +415,7 @@ export function renderCatalog(
 ${hero()}
 ${renderBoard(board, canaryHistory)}
 <main class="wrap">
-  <div class="pick" id="pick" data-ambient="down" data-ambient-below=".sub" data-ambient-strength="0.55">
+  <div class="pick" id="pick">
   <h2>Pick one.</h2>
   <p class="sub">
     Real upstream builds, already seeded with something to look at. Blink brings the machine.
@@ -442,7 +442,7 @@ ${renderBoard(board, canaryHistory)}
     not a safe one to run publicly.
   </p>`}
 
-  <div class="cards" data-ambient="up" data-ambient-strength="0.3">${apps.map((a) => card(a, launchesOff !== undefined)).join("\n")}</div>
+  <div class="cards">${apps.map((a) => card(a, launchesOff !== undefined)).join("\n")}</div>
 </main>
 <footer class="foot" data-ambient="up" data-ambient-below="span" data-reveal-on-scroll>
   <span><a href="/health">Health wall</a> &middot; every check names what it asked</span>
