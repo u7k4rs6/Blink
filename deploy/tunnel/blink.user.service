@@ -15,11 +15,21 @@
 # setsid and disown are not enough when the parent is torn down by session or
 # cgroup. systemd owns the process instead, which is the whole point of it.
 #
-# This is a USER unit deliberately. A system unit would need root and would try
-# to start at boot before the desktop session exists; the site's honest claim is
-# that it is up while this machine is awake and logged in, and a user unit is
-# exactly that lifetime. Lingering is left off for the same reason: enabling it
-# would make the service outlive the login and quietly overstate the claim.
+# This is a USER unit deliberately. A system unit would need root, and the
+# site's honest claim is that it is up while this machine is on.
+#
+# Lingering is ON (`loginctl enable-linger`). It was off originally, on the
+# reasoning that outliving the login would overstate the claim. That was the
+# wrong trade: with linger off, a logout or a user switch takes the site down
+# silently, while every local signal stays green, which is the failure this
+# deployment already has two entries for. The claim is now "on while the machine
+# is on", and linger is what makes that true rather than aspirational.
+#
+# Note that After=network-online.target below does NOT wait for real
+# connectivity in a user unit: that target belongs to the user manager, which
+# nothing orders against the network. run.sh polls for outbound reachability
+# itself before starting the tunnel. Do not delete that poll on the strength of
+# the ordering here.
 
 [Unit]
 Description=Blink (web server, watchdog and Cloudflare Tunnel)

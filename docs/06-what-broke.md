@@ -6,7 +6,7 @@ a control that exists, passes its own test, and cannot fire. A green signal is
 worth exactly as much as the thing it actually measured.
 
 The dated, evidenced version of all of this is
-[`00-verification.md`](00-verification.md), 114 rows.
+[`00-verification.md`](00-verification.md), 115 rows.
 
 ## Three mistakes we found in our own measuring
 

@@ -2,7 +2,7 @@
 
 | Doc | What it is |
 |-----|------------|
-| [`00-verification.md`](00-verification.md) | 114 rows. Every claim checked against a live source, with the verdict, the evidence and the cost. |
+| [`00-verification.md`](00-verification.md) | 115 rows. Every claim checked against a live source, with the verdict, the evidence and the cost. |
 | [`06-what-broke.md`](06-what-broke.md) | The bugs, and what separates them. |
 | [`01-prd.md`](01-prd.md) | Requirements, budget model, open questions. Section 2 is the problem this exists for. |
 | [`02-architecture.md`](02-architecture.md) | 8.1 is the counting fetch, 8.2 is the three-layer expiry. |

@@ -68,6 +68,14 @@ say() { printf '\n[run] %s\n' "$1"; }
 # If the last run was OOM killed or the lid was closed, sandboxes from it may
 # still be alive and billing. Killing them before accepting a single new launch
 # is the cheapest thing this script does.
+# Keep one generation of each log. These are opened with `>`, so a restart
+# truncates them, and Restart=on-failure means the restart happens 60 seconds
+# after the failure: the log that explains why the tunnel died is destroyed by
+# the retry it triggered. That is how the boot race below stayed invisible.
+for f in tunnel blink watchdog; do
+  [ -s "$LOG_DIR/$f.log" ] && mv -f "$LOG_DIR/$f.log" "$LOG_DIR/$f.prev.log"
+done
+
 say "sweeping orphans from any previous run"
 npm run sweep --silent || echo "  sweep failed; continuing, the watchdog will retry"
 
@@ -105,6 +113,30 @@ if ! curl -sf -m 2 -o /dev/null "http://127.0.0.1:${PORT}/"; then
 fi
 grep -m1 '\[ledger\]' "$LOG_DIR/blink.log" || true
 
+# Wait for the internet, not for network-online.target.
+#
+# This unit carries After=network-online.target, and in a USER unit that target
+# is the user manager's own, which nothing orders against real connectivity. So
+# at boot the tunnel started 1 second after the service did, could not reach the
+# Cloudflare edge, and exited on its own two seconds later. run.sh correctly
+# shut the rest down and exited non-zero, systemd correctly restarted it 60
+# seconds later, and by then the network was up. Every reboot therefore cost a
+# 60 second public outage that every local signal recorded as a clean recovery.
+#
+# cloudflared needs DNS and egress. Ask for both, rather than trusting an
+# ordering dependency that does not mean what it reads as.
+say "waiting for outbound connectivity"
+i=0
+while [ $i -lt 60 ]; do
+  if curl -sf -m 3 -o /dev/null https://www.cloudflare.com/cdn-cgi/trace; then break; fi
+  sleep 1
+  i=$((i + 1))
+done
+if ! curl -sf -m 3 -o /dev/null https://www.cloudflare.com/cdn-cgi/trace; then
+  echo "no outbound connectivity after 60s; not starting the tunnel" >&2
+  kill "$BLINK_PID" "$WATCHDOG_PID" 2>/dev/null || true
+  exit 1
+fi
 say "starting tunnel"
 setsid cloudflared tunnel --config "$HOME/.cloudflared/config.yml" run > "$LOG_DIR/tunnel.log" 2>&1 &
 TUNNEL_PID=$!
