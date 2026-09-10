@@ -595,8 +595,14 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 
 /* -------------------------------------------------------------------- footer */
 
+/*
+ * The closing stretch. The extra depth is what the ambient band lives in: the
+ * band is anchored below the footer's own text, so the wave has somewhere to be
+ * that is not on top of the words. Without the room it drew through them.
+ */
 .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--cell);
-  padding: calc(var(--cell) * 1.5) var(--gutter) calc(var(--cell) * 3); border-top: 1px solid var(--line); }
+  padding: calc(var(--cell) * 1.5) var(--gutter) calc(var(--cell) * 9);
+  border-top: 1px solid var(--line); }
 .foot a { border: 0; color: var(--ink); }
 
 /* ------------------------------------------------------------------- motion */
