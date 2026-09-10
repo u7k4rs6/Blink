@@ -10,7 +10,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { TOKENS, CSS, contrast } from "../src/web/tokens.ts";
-import { esc, renderCatalog, renderHealthWall, renderReceipt, renderLaunchPanel, type App, type Board } from "../src/web/render.ts";
+import { esc, renderCatalog, renderBoard, renderHealthWall, renderReceipt, renderLaunchPanel, type App, type Board } from "../src/web/render.ts";
 import { buildReceipt, fmtDuration, fmtUsd } from "../src/web/receipt.ts";
 import { pillsFor, labelAt } from "../src/web/launch-timeline.ts";
 import { PLANS, SIZE_SMALL } from "../src/guard/rates.ts";
@@ -437,6 +437,61 @@ test("a soak strip says so, instead of looking like the canary's verdict", () =>
     { continuousHours: 1, distinctHours: 1, runs: 1 });
   assert.match(canaryRow, /last 24 canary checks/);
   assert.ok(!/earlier run/.test(canaryRow), "canary rows must not be labelled as soak");
+});
+
+test("the type scale is the only source of a font size", async () => {
+  /*
+   * The catalog carried five body sizes inside seven pixels of each other
+   * (21, 19, 17, 15, 14) and thirty six inline `font-size` rules across three
+   * files. None was wrong on its own, which is why it accumulated: each was
+   * reached for once, in one place, and never compared against the others.
+   * A reader cannot tell a deliberate step from a rounding error, so the whole
+   * page reads as sloppiness rather than as hierarchy.
+   *
+   * The fix is not tidier numbers, it is having somewhere for a number to come
+   * from. This test is what stops the next one being typed in a style attribute.
+   */
+  const { readFileSync } = await import("node:fs");
+  for (const file of ["render.ts", "offline.ts", "server.ts", "tokens.ts"]) {
+    const src = readFileSync(new URL(`../src/web/${file}`, import.meta.url), "utf8");
+    const literal = [...src.matchAll(/font-size:\s*(\d+)px/g)].map((m) => m[0]);
+    assert.deepEqual(literal, [],
+      `${file} sets a font size by hand. Every size comes from TYPE in tokens.ts.`);
+  }
+  // And within a register, the steps have to be far enough apart to read as
+  // steps. Across registers they do not: 12px mono and 13px sans are a pixel
+  // apart and the face separates them before the size does.
+  const { TYPE, REGISTER } = await import("../src/web/tokens.ts");
+  const names = Object.keys(TYPE) as Array<keyof typeof TYPE>;
+  assert.deepEqual(Object.keys(REGISTER), names, "every step declares its face");
+  for (const face of ["mono", "sans"] as const) {
+    const steps = names.filter((n) => REGISTER[n] === face).map((n) => TYPE[n] as number);
+    for (let i = 1; i < steps.length; i++) {
+      assert.ok(steps[i]! >= steps[i - 1]! * 1.15,
+        `${face}: ${steps[i - 1]} to ${steps[i]} is not a visible step`);
+    }
+  }
+});
+
+test("a board cell holds one number, because the readout is sized for one", () => {
+  /*
+   * The credits cell read "$0.00 / $20.00" at the same 60px as "0", needed
+   * 391px in a 223px cell, and hung 168px past its own border into the next
+   * one. Two numbers in a slot the panel treats as holding one.
+   *
+   * Spent is the measurement. The cap is the bound the gauge is drawn against,
+   * so it belongs to the gauge, where it also gives the bar the scale it was
+   * missing.
+   */
+  const html = renderBoard({ ...board, creditsUsedUsd: 1234.56, creditsCapUsd: 20 });
+  for (const m of html.matchAll(/<div class="cell-value">([^<]*)<\/div>/g)) {
+    assert.ok(m[1]!.length <= 8,
+      `board value ${JSON.stringify(m[1])} is too long for a 60px readout`);
+  }
+  assert.match(html, /class="cell-label gauge-cap">of \$20\.00 cap</,
+    "the cap labels the bar it bounds");
+  assert.ok(!/cell-value">[^<]*\/[^<]*</.test(html),
+    "no cell-value may carry a second figure after a slash");
 });
 
 test("monospace DATA is never uppercased, because ids are not labels", () => {

@@ -106,8 +106,9 @@ ${boardCell(
 )}
 ${boardCell(
   "Credits (estimate)",
-  `$${b.creditsUsedUsd.toFixed(2)} / $${b.creditsCapUsd.toFixed(2)}`,
-  `<div class="gauge"><i style="width:${pct.toFixed(1)}%"></i></div>`,
+  `$${b.creditsUsedUsd.toFixed(2)}`,
+  `<div class="gauge"><i style="width:${pct.toFixed(1)}%"></i></div>` +
+    `<div class="cell-label gauge-cap">of $${b.creditsCapUsd.toFixed(2)} cap</div>`,
 )}
 </div>
 <div class="board-note">
@@ -155,7 +156,7 @@ ${shot}
   ${app.credentials ? `<div class="label creds">
     signs you in with ${esc(app.credentials.user)} / ${esc(app.credentials.password)}
   </div>` : ""}
-  ${down ? `<p class="fail" style="margin:0;font-size:13px">Down since ${esc(app.canary.downSince ?? "recently")}. <a href="/health">See the health wall</a></p>` : ""}
+  ${down ? `<p class="fail t-small" style="margin:0">Down since ${esc(app.canary.downSince ?? "recently")}. <a href="/health">See the health wall</a></p>` : ""}
   <div class="card-foot">
     <span>${esc(app.license)}</span><span class="sep">&middot;</span>
     <a href="${esc(app.upstream)}" rel="noopener">upstream &#8599;</a>
@@ -172,7 +173,7 @@ export function renderLaunchPanel(appId: string, input: TimelineInput, instanceI
   const pills = pillsFor(input);
   return `<div class="panel" data-launching="${esc(appId)}"${instanceId ? ` data-instance="${esc(instanceId)}"` : ""}>
 <div class="timer mono" data-timer data-stopped="0">0.00</div>
-<div class="muted" data-timer-label style="font-size:13px">starting</div>
+<div class="muted t-small" data-timer-label>starting</div>
 <div class="pills">
 ${pills.map((p) => `<div class="pill" data-pill="${esc(p.id)}" data-on="0"><i></i>${esc(p.label)}</div>`).join("\n")}
 </div>
@@ -209,14 +210,14 @@ export function renderToolbar(inst: {
   const creds = inst.credentials
     ? `<div class="panel" style="margin-top:var(--cell);padding:var(--cell)">
     <div class="label">sign in with</div>
-    <div class="mono" style="font-size:15px">${esc(inst.credentials.user)} &nbsp; ${esc(inst.credentials.password)}</div>
-    <p class="muted" style="margin:6px 0 0;font-size:13px">
+    <div class="mono t-body">${esc(inst.credentials.user)} &nbsp; ${esc(inst.credentials.password)}</div>
+    <p class="muted t-small" style="margin:6px 0 0">
       This account exists only inside your instance and dies with it in ten minutes.
     </p>
   </div>` : "";
   return `<div class="panel" data-toolbar="${esc(inst.id)}">
   <div class="timer mono" data-countdown data-ms="${inst.msRemaining}">${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}</div>
-  <div class="muted" style="font-size:13px">until your ${esc(inst.appName)} is destroyed</div>
+  <div class="muted t-small">until your ${esc(inst.appName)} is destroyed</div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
     <button class="btn btn-ghost" style="width:auto" data-extend="${esc(inst.id)}"${inst.extended ? " disabled" : ""}>
       ${inst.extended ? "extended once" : "Extend +10 min"}
@@ -227,7 +228,7 @@ export function renderToolbar(inst: {
     <button class="btn btn-danger" style="width:auto" data-destroy="${esc(inst.id)}">Destroy</button>
   </div>
   ${creds}
-  <p class="muted" style="font-size:12px">anyone with this link can use your instance until it expires</p>
+  <p class="muted t-small">anyone with this link can use your instance until it expires</p>
 </div>`;
 }
 
@@ -258,17 +259,17 @@ export function renderInstanceEnded(opts: {
     ? `Your ${esc(opts.appName)} reached the end of its ten minutes.`
     : `Your ${esc(opts.appName)} has ended.`;
   return `<div class="panel" data-ended="1">
-  <h2 style="font-size:26px">${what}</h2>
+  <h2 class="t-title">${what}</h2>
   <p class="muted" style="margin:0;max-width:44ch">
     It has been destroyed along with everything in it. That is what is supposed to
     happen${opts.lastedMinutes !== undefined ? ` after ${esc(opts.lastedMinutes)} minutes` : ""},
     and nothing went wrong.
   </p>
-  <p class="muted" style="margin:0;max-width:44ch;font-size:15px">
+  <p class="muted t-body" style="margin:0;max-width:44ch">
     The old link will not work any more. It points at a machine that no longer
     exists, so it answers with a bare 404 that does not explain itself.
   </p>
-  ${opts.shared ? `<p class="muted" style="margin:0;max-width:44ch;font-size:15px">
+  ${opts.shared ? `<p class="muted t-body" style="margin:0;max-width:44ch">
     Somebody shared this with you while it was running. You can start your own,
     which will be a fresh instance with the same seeded data.
   </p>` : ""}
@@ -300,9 +301,9 @@ export function renderSharePage(opts: {
   }
   return `<div class="panel"><h2 style="margin-top:0">Someone shared their ${esc(opts.appName)} with you</h2>
 <p class="muted">You will get your own copy of their instance, with their work in it. Yours is separate from theirs: nothing you do here reaches them.</p>
-<p class="muted mono" style="font-size:12px">forked ${esc(opts.forkCount)} time${opts.forkCount === 1 ? "" : "s"} so far</p>
+<p class="muted mono">forked ${esc(opts.forkCount)} time${opts.forkCount === 1 ? "" : "s"} so far</p>
 <button class="btn" data-launch-share="${esc(opts.token)}">Open my copy</button>
-<p class="muted" style="font-size:12px;margin-bottom:0">
+<p class="muted t-small" style="margin-bottom:0">
   <a href="/report/${esc(opts.token)}">Report this link</a> if it contains something it should not.
 </p></div>`;
 }
@@ -311,11 +312,11 @@ export function renderReceipt(r: Receipt): string {
   const rows = receiptRows(r);
   return `<div class="panel">
 <h3 style="margin-top:0">Session receipt</h3>
-${r.lost ? `<p class="fail mono" style="font-size:13px">instance ended early (lost)</p>` : ""}
+${r.lost ? `<p class="fail mono">instance ended early (lost)</p>` : ""}
 <table class="receipt">
 ${rows.map((row) => `<tr>${row.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("\n")}
 </table>
-<p class="muted" style="font-size:12px;margin-bottom:0">${esc(r.note)}</p>
+<p class="muted t-small" style="margin-bottom:0">${esc(r.note)}</p>
 </div>`;
 }
 
@@ -417,7 +418,7 @@ ${renderBoard(board, canaryHistory)}
     Real upstream builds, already seeded with something to look at. Blink brings the machine.
   </p>
   </div>
-  ${launchesOff ? `<p class="warn" style="max-width:52ch;font-size:17px;margin:0 0 calc(var(--cell) * 2)">
+  ${launchesOff ? `<p class="warn t-body" style="max-width:52ch;margin:0 0 calc(var(--cell) * 2)">
     <strong>Launches are paused.</strong> ${esc(launchesOff)}
   </p>` : ""}
   ${turnstileSiteKey ? `<div class="verify">
@@ -432,7 +433,7 @@ ${renderBoard(board, canaryHistory)}
       <p class="muted">One check, once. A real machine with open outbound network is worth standing in front of.</p>
       <p id="ts-state" class="label" data-state="pending">checking you are a person</p>
     </div>
-  </div>` : `<p class="warn" style="font-size:13px;max-width:62ch">
+  </div>` : `<p class="warn t-small" style="max-width:62ch">
     Bot verification is disabled on this instance. Every launch spends real money on a
     machine with unrestricted outbound network, so this is a development setting and
     not a safe one to run publicly.
@@ -644,33 +645,33 @@ export function renderHealthWall(rows: Array<{
   return page(
     "Blink health wall",
     `<main class="wrap" style="padding-top:40px">
-<h1 style="font-size:24px">Health wall</h1>
+<h1 class="t-title">Health wall</h1>
 <p class="muted" style="max-width:70ch">
   Each row says what its canary actually asked. A status code would show green for an app
   serving its own installer, which is not a hypothetical: it happened twice while building this.
 </p>
-${hosting?.onLaptop ? `<p class="warn" style="font-size:13px;max-width:70ch">
+${hosting?.onLaptop ? `<p class="warn t-small" style="max-width:70ch">
   <strong>This site runs from a laptop.</strong> It is up while that machine is awake, unlocked
   and connected, and down when the lid closes or it sleeps. There is no second server and no
   failover. Every measurement on this page is real; the uptime is not a service.
 </p>` : ""}
-<p class="mono" style="font-size:13px">
+<p class="mono">
   ${soak.continuousHours >= 24
     ? `Soaked continuously for ${soak.continuousHours} hours on the host that serves this page.`
     : `Soaked for ${soak.distinctHours} ${soak.distinctHours === 1 ? "hour" : "hours"} total across ${soak.runs} separate runs. Longest uninterrupted stretch: ${soak.continuousHours} ${soak.continuousHours === 1 ? "hour" : "hours"}.`}
 </p>
-${ledger && !ledger.isDurable ? `<p class="warn mono" style="font-size:13px">
+${ledger && !ledger.isDurable ? `<p class="warn mono">
   Ledger store: ${esc(ledger.describe)}. Spending totals on this instance reset when the server restarts,
   so the credit figure is for this process only.
-</p>` : ledger ? `<p class="muted mono" style="font-size:13px">Ledger store: ${esc(ledger.describe)}.</p>` : ""}
+</p>` : ledger ? `<p class="muted mono">Ledger store: ${esc(ledger.describe)}.</p>` : ""}
 ${rows.map((r) => `<div class="row">
-  <div><strong>${esc(r.app)}</strong><div class="muted mono" style="font-size:11px">${esc(r.snapshot)}</div></div>
+  <div><strong>${esc(r.app)}</strong><div class="muted mono">${esc(r.snapshot)}</div></div>
   <div><div class="strip">${r.strip.map((s) => `<i data-s="${esc(s)}"></i>`).join("")}</div>
     <div class="label" style="margin-top:6px">${
       r.source === "canary" ? "last 24 canary checks" : "last 24 soak checks, from an earlier run"
     }</div>
-    <div class="muted" style="font-size:12px;margin-top:4px">${esc(r.asked)}</div></div>
-  <div class="mono" style="font-size:12px">
+    <div class="muted t-small" style="margin-top:4px">${esc(r.asked)}</div></div>
+  <div class="mono">
     resolve p50 ${r.p50 === null ? "no data" : `${r.p50} ms`} &middot; p95 ${r.p95 === null ? "no data" : `${r.p95} ms`}
     <div class="muted">last ${esc(r.lastAt)}</div>
   </div>

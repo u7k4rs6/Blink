@@ -37,7 +37,7 @@ import { renderOffline, type OfflineSnapshot } from "./offline.ts";
 import { readAll } from "../orchestrator/store.ts";
 import { readFileSync as readBin } from "node:fs";
 import { join as joinPath } from "node:path";
-import { TOKENS, FONT_TEXT, CELL, RADIUS } from "./tokens.ts";
+import { TOKENS, FONT_TEXT, CELL, RADIUS, TYPE } from "./tokens.ts";
 import { SEEDED } from "../catalog/credentials.ts";
 
 /**
@@ -559,8 +559,9 @@ const server = createServer(async (req, res) => {
       // cannot be the one page still wearing the old dark theme.
       `<style>body{background:${TOKENS.bg};color:${TOKENS.text};font-family:${FONT_TEXT};padding:calc(${CELL}px * 4)}` +
       `.panel{max-width:560px;border:1px solid ${TOKENS.border};border-radius:${RADIUS}px;padding:calc(${CELL}px * 2);background:${TOKENS.surface}}` +
-      `.receipt{font-family:ui-monospace,monospace;font-size:13px;width:100%;border-collapse:collapse}` +
+      `.receipt{font-family:ui-monospace,monospace;font-size:${TYPE.data}px;width:100%;border-collapse:collapse}` +
       `.receipt td{padding:4px 8px;border-bottom:1px solid ${TOKENS.border}}.receipt td:last-child{text-align:right}` +
+      `.t-small{font-size:${TYPE.small}px}` +
       `.muted{color:${TOKENS.muted}}.fail{color:${TOKENS.fail}}</style>${renderReceipt(r)}`);
   }
 
@@ -613,8 +614,8 @@ const server = createServer(async (req, res) => {
       const pos = queue.enqueue(appId, session);
       return send(200, `<div class="panel" data-queued="${esc(pos.id)}">
         <div class="timer mono">${esc(pos.ahead + 1)}</div>
-        <div class="muted" style="font-size:13px">in the queue for ${esc(app.name)}</div>
-        <p class="muted" style="font-size:13px">About ${esc(pos.estimateSeconds)} seconds. Nothing has been charged, and you keep your place while this page is open.</p>
+        <div class="muted t-small">in the queue for ${esc(app.name)}</div>
+        <p class="muted t-small">About ${esc(pos.estimateSeconds)} seconds. Nothing has been charged, and you keep your place while this page is open.</p>
       </div>`);
     }
     void (async () => {

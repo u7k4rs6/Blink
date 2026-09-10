@@ -85,6 +85,56 @@ export const READ_WIDTH = "34ch";
 export const SPACE = [14, 28, 42, 56, 84, 112] as const;
 
 /**
+ * The type scale. Nine steps, each with exactly one job.
+ *
+ * Before this existed the page carried five body sizes inside seven pixels of
+ * each other (21, 19, 17, 15, 14) plus thirty six inline `font-size` rules
+ * across three files, all reached for one at a time and none of them wrong on
+ * its own. The result reads as sloppiness rather than as hierarchy, because a
+ * reader cannot tell a deliberate step from a rounding error.
+ *
+ * A step earns its place by being visibly different from its neighbour and by
+ * naming what it is for. Anything that does not fit a step here does not get a
+ * new size; it gets an existing one.
+ */
+export const TYPE = {
+  /** Mono, uppercase, tracked. Every micro label on the page. */
+  micro: 10,
+  /** Mono. Ids, timestamps, receipts, the launch command. Never uppercased. */
+  data: 12,
+  /** Secondary prose: captions, notes, the line under a number. */
+  small: 13,
+  /** Running prose. Card descriptions, things to try, body paragraphs. */
+  body: 16,
+  /** The one supporting line under a statement. */
+  lede: 20,
+  /** Card titles and panel headings. */
+  title: 28,
+  /** Section headings. */
+  head: 46,
+  /** The board numbers and the timers. The data as the visual. */
+  readout: 60,
+  /** The hero statement. There is one of these. */
+  display: 88,
+} as const;
+
+/**
+ * Which face each step is set in.
+ *
+ * The scale has two registers and a step only has to be visibly apart from its
+ * neighbours WITHIN one. `data` at 12 and `small` at 13 are a pixel apart and
+ * are never mistaken for each other, because a monospace advance width is the
+ * thing the eye reads before it reads a size. Across the sans register, where
+ * the reader has nothing but size to go on, every step is at least 15% clear
+ * of the one below it, which is what the earlier 21/19/17/15/14 pile was not.
+ */
+export const REGISTER = {
+  micro: "mono", data: "mono",
+  small: "sans", body: "sans", lede: "sans",
+  title: "sans", head: "sans", readout: "sans", display: "sans",
+} as const;
+
+/**
  * Space Grotesk, with a real fallback stack behind it.
  *
  * The reference uses Sneak, which is licensed and cannot ship here. Space
@@ -154,6 +204,13 @@ export const CSS = `
   --font: ${FONT_TEXT};
   --mono: ${FONT_MONO};
 
+  --fs-micro: ${TYPE.micro}px;
+  --fs-data: ${TYPE.data}px;
+  --fs-small: ${TYPE.small}px;
+  --fs-body: ${TYPE.body}px;
+  --fs-lede: ${TYPE.lede}px;
+  --fs-title: ${TYPE.title}px;
+
   /* Kept so the old names resolve rather than silently rendering transparent. */
   --bg: var(--paper);
   --text: var(--ink);
@@ -193,7 +250,7 @@ body {
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font);
-  font-size: 17px;
+  font-size: var(--fs-body);
   line-height: 1.5;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -212,7 +269,7 @@ a:hover, a:focus-visible { border-bottom-color: var(--ink); }
  */
 .label, .cell-label, .shot-cap, .chip, .slots, .kick, .cat, .steps, .card-foot, .sys, .foot {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: var(--fs-micro);
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--muted);
@@ -226,11 +283,20 @@ a:hover, a:focus-visible { border-bottom-color: var(--ink); }
  */
 .mono {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--fs-data);
   letter-spacing: 0;
   text-transform: none;
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * The three utilities. Every size on the page comes from the scale, so a page
+ * cannot invent a fourteenth pixel value by reaching for a style attribute.
+ */
+.t-small { font-size: var(--fs-small); }
+.t-body { font-size: var(--fs-body); }
+.t-lede { font-size: var(--fs-lede); line-height: 1.4; }
+.t-title { font-size: var(--fs-title); }
 
 /*
  * Two registers of type. Statement type is the display face, large and tight.
@@ -238,8 +304,8 @@ a:hover, a:focus-visible { border-bottom-color: var(--ink); }
  * between, and that gap is most of the hierarchy.
  */
 h1, h2, h3 { font-weight: 700; letter-spacing: -.03em; line-height: 1.02; margin: 0; }
-h1 { font-size: clamp(40px, 6.4vw, 88px); letter-spacing: -.04em; }
-h2 { font-size: clamp(28px, 3.4vw, 46px); }
+h1 { font-size: clamp(40px, 6.4vw, ${TYPE.display}px); letter-spacing: -.04em; }
+h2 { font-size: clamp(${TYPE.title}px, 3.4vw, ${TYPE.head}px); }
 p { margin: 0 0 calc(var(--cell) * 1); }
 
 .muted { color: var(--muted); }
@@ -270,14 +336,14 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 }
 .masthead .brand {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--fs-data);
   letter-spacing: .22em;
   text-transform: uppercase;
   border: 0;
 }
 .masthead .sys { letter-spacing: .1em; }
 .masthead nav { display: flex; gap: calc(var(--cell) * 2); justify-self: end; }
-.masthead nav a { border: 0; font-family: var(--mono); font-size: 10px;
+.masthead nav a { border: 0; font-family: var(--mono); font-size: var(--fs-micro);
   letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .masthead nav a:hover { color: var(--ink); }
 
@@ -287,7 +353,7 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 .hero .wrap { padding-top: calc(var(--cell) * 5); padding-bottom: calc(var(--cell) * 13); }
 .hero h1 { max-width: 100%; }
 .hero .lede { max-width: 34ch; margin: calc(var(--cell) * 2) 0 0; color: var(--muted);
-  font-size: 21px; line-height: 1.35; }
+  font-size: var(--fs-lede); line-height: 1.35; }
 
 /*
  * The provisioning ladder. Five steps, one hairline each, set as instrument
@@ -326,13 +392,21 @@ p { margin: 0 0 calc(var(--cell) * 1); }
   border-left: 1px solid var(--line); }
 .board-grid > div { padding: calc(var(--cell) * 2) calc(var(--cell) * 1.5) calc(var(--cell) * 1.5);
   border-right: 1px solid var(--line); display: flex; flex-direction: column; }
-.cell-value { order: 0; font-size: clamp(36px, 4.2vw, 60px); font-weight: 500; white-space: nowrap;
+.cell-value { order: 0; font-size: clamp(36px, 4.2vw, ${TYPE.readout}px); font-weight: 500; white-space: nowrap;
   line-height: 1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
-.cell-value.cell-none { font-size: 15px; letter-spacing: 0; color: var(--muted);
+.cell-value.cell-none { font-size: var(--fs-body); letter-spacing: 0; color: var(--muted);
   line-height: 1.4; padding: 10px 0 8px; }
 .cell-label { order: 1; margin: 12px 0 0; }
 .gauge { order: 2; margin-top: 12px; height: 4px; background: var(--line-2); }
 .gauge i { display: block; height: 100%; background: var(--ink); }
+/*
+ * The gauge's scale. The cap used to sit inside the value as "$0.00 / $20.00",
+ * which needed 391px in a 223px cell and hung 168px past its own border, and
+ * put two numbers in a slot the whole panel treats as holding one. Spent is
+ * the measurement; the cap is the bound the bar is drawn against, so it
+ * belongs to the bar.
+ */
+.gauge-cap { order: 3; margin-top: 6px; text-align: right; }
 .staledot { display: inline-block; width: 8px; height: 8px; margin-right: 8px;
   background: var(--alive); vertical-align: 1px; outline: 1px solid rgba(10, 10, 10, .18); }
 .staledot[data-stale="1"] { background: transparent; outline-color: var(--line); }
@@ -342,7 +416,7 @@ p { margin: 0 0 calc(var(--cell) * 1); }
   align-items: end; padding: calc(var(--cell) * 1.25) 0 calc(var(--cell) * 1.5);
   border-top: 1px solid var(--line); }
 .board-note .label { color: var(--ink); }
-.board-note .muted { font-size: 12px; margin-top: 6px; max-width: 60ch; }
+.board-note .muted { font-size: var(--fs-small); margin-top: 6px; max-width: 60ch; }
 .canary { text-align: right; }
 
 /*
@@ -361,7 +435,8 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 
 .pick { padding-top: calc(var(--cell) * 6); }
 .pick h2 { margin: 0; }
-.pick .sub { margin: calc(var(--cell) * 1) 0 0; max-width: 46ch; color: var(--muted); font-size: 19px; }
+.pick .sub { margin: calc(var(--cell) * 1) 0 0; max-width: 46ch; color: var(--muted);
+  font-size: var(--fs-lede); line-height: 1.4; }
 
 /*
  * The one check, as a row of the instrument rather than a widget dropped on
@@ -372,7 +447,7 @@ p { margin: 0 0 calc(var(--cell) * 1); }
   align-items: center; margin: calc(var(--cell) * 3) 0 0; padding: calc(var(--cell) * 1.25) 0;
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .verify .label { color: var(--ink); }
-.verify .muted { font-size: 14px; margin: 0; max-width: 48ch; }
+.verify .muted { font-size: var(--fs-small); margin: 0; max-width: 48ch; }
 .verify #ts-state { margin-top: 6px; }
 .verify #ts-state[data-state="ok"]::before { content: ""; display: inline-block; width: 8px; height: 8px;
   background: var(--alive); outline: 1px solid rgba(10,10,10,.18); margin-right: 8px; vertical-align: 1px; }
@@ -416,25 +491,25 @@ p { margin: 0 0 calc(var(--cell) * 1); }
   border-top: 1px solid var(--line); }
 .shot-state > * { white-space: nowrap; }
 .shot-state .shot-cap { padding: 0; }
-.shot-state .ok, .shot-state .fail { font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+.shot-state .ok, .shot-state .fail { font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: .12em;
   text-transform: uppercase; }
 .shot-state .ok { color: var(--ink); }
 
 .card-body { display: flex; flex-direction: column; gap: calc(var(--cell) * 1);
   padding: calc(var(--cell) * 1.25) calc(var(--cell) * 1.5) calc(var(--cell) * 1.5); }
-.card-title h2 { font-size: 28px; letter-spacing: -.035em; }
+.card-title h2 { font-size: var(--fs-title); letter-spacing: -.035em; }
 .cat { display: block; margin-top: 4px; }
-.desc { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.45; }
+.desc { margin: 0; font-size: var(--fs-body); color: var(--muted); line-height: 1.45; }
 
 /*
  * Things to try, numbered as part of the instrument: 01, 02, 03 in the label
  * face, tight enough to read as one block.
  */
-.try { margin: 0; padding: 0; list-style: none; counter-reset: try; font-size: 15px; }
+.try { margin: 0; padding: 0; list-style: none; counter-reset: try; font-size: var(--fs-body); }
 .try li { counter-increment: try; display: grid; grid-template-columns: 28px 1fr; gap: 6px;
   padding: 5px 0; border-top: 1px solid var(--line-2); }
 .try li:first-child { border-top: 0; }
-.try li::before { content: counter(try, decimal-leading-zero); font-family: var(--mono); font-size: 10px;
+.try li::before { content: counter(try, decimal-leading-zero); font-family: var(--mono); font-size: var(--fs-micro);
   letter-spacing: .12em; color: var(--muted); padding-top: 4px; }
 
 .creds { display: block; }
@@ -455,7 +530,7 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 /* ------------------------------------------------------------------- buttons */
 
 .btn {
-  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
+  font: inherit; font-size: var(--fs-body); font-weight: 500; cursor: pointer;
   background: var(--ink); color: var(--paper); border: 1px solid var(--ink);
   border-radius: var(--radius); padding: 12px 20px; width: 100%;
   transition: background-color .12s ease, color .12s ease, border-color .12s ease;
@@ -468,11 +543,11 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 .btn-danger { background: var(--fail); border-color: var(--fail); color: var(--paper); }
 
 .btn-launch { display: flex; justify-content: space-between; align-items: center;
-  font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+  font-family: var(--mono); font-size: var(--fs-data); letter-spacing: .16em; text-transform: uppercase;
   padding: 14px 18px; }
 .btn-launch:hover:not(:disabled) { background: var(--alive); color: var(--ink); border-color: var(--ink); }
 .btn-launch:disabled { justify-content: center; }
-.btn-launch .arrow { font-size: 14px; letter-spacing: 0; }
+.btn-launch .arrow { font-size: var(--fs-small); letter-spacing: 0; }
 
 /*
  * The one button the site exists for, so it stops looking like the other four.
@@ -496,14 +571,14 @@ p { margin: 0 0 calc(var(--cell) * 1); }
  * something is happening.
  */
 .pills { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-2); }
-.pill { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 10px;
+.pill { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: var(--fs-micro);
   letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 7px 0;
   border-bottom: 1px solid var(--line-2); border-radius: 0; }
 .pill i { width: 8px; height: 8px; display: block; background: transparent;
   outline: 1px solid var(--line); flex: none; }
 .pill[data-on="1"] { color: var(--ink); }
 .pill[data-on="1"] i { background: var(--alive); outline-color: rgba(10, 10, 10, .18); }
-.timer { font-size: clamp(36px, 4.6vw, 64px); line-height: 1; letter-spacing: -.035em; font-weight: 500;
+.timer { font-size: clamp(36px, 4.6vw, ${TYPE.readout}px); line-height: 1; letter-spacing: -.035em; font-weight: 500;
   font-family: var(--font); font-variant-numeric: tabular-nums; text-transform: none; color: var(--ink); }
 
 .strip { display: flex; gap: 2px; }
@@ -515,7 +590,7 @@ p { margin: 0 0 calc(var(--cell) * 1); }
 
 .row { display: grid; gap: calc(var(--cell) * .5); padding: calc(var(--cell) * 1.5) 0;
   border-bottom: 1px solid var(--line-2); }
-.receipt { font-family: var(--mono); font-size: 12px; text-transform: none;
+.receipt { font-family: var(--mono); font-size: var(--fs-data); text-transform: none;
   letter-spacing: 0; color: var(--ink); }
 
 /* -------------------------------------------------------------------- footer */

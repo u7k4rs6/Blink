@@ -42,7 +42,7 @@ export function renderOffline(s: OfflineSnapshot): string {
 </head><body>
 <main class="wrap" style="padding:64px 16px;max-width:720px">
 
-  <h1 style="font-size:28px;margin:0 0 16px">Blink is asleep right now.</h1>
+  <h1 class="t-title" style="margin:0 0 16px">Blink is asleep right now.</h1>
 
   <p style="max-width:62ch;margin:0 0 8px">
     Blink runs from a laptop, not a server. It is up while that machine is awake and
@@ -55,32 +55,32 @@ export function renderOffline(s: OfflineSnapshot): string {
     written at ${esc(captured)} UTC.
   </p>
 
-  <h2 style="font-size:18px;margin:0 0 8px">What it does when it is awake</h2>
-  <p class="muted" style="max-width:62ch;margin:0 0 16px;font-size:14px">
+  <h2 class="t-lede" style="margin:0 0 8px">What it does when it is awake</h2>
+  <p class="muted t-small" style="max-width:62ch;margin:0 0 16px">
     You pick an open source app, press Launch, and get your own seeded instance in a
     few seconds. It is yours alone, and it is destroyed ten minutes later.
   </p>
   ${s.recordingUrl ? `<p style="margin:0 0 40px"><a href="${esc(s.recordingUrl)}">Watch a recorded launch</a>, which is the same thing you would have done here.</p>` : ""}
 
-  <h2 style="font-size:18px;margin:40px 0 8px">Last known health</h2>
-  <p class="muted" style="font-size:13px;margin:0 0 16px">
+  <h2 class="t-lede" style="margin:40px 0 8px">Last known health</h2>
+  <p class="muted t-small" style="margin:0 0 16px">
     Each check does the app's real work. None of them is a status code, because an app
     can answer 200 from its own installer.
   </p>
   ${s.apps.map((a) => `<div class="row">
     <div><strong>${esc(a.name)}</strong></div>
-    <div class="muted" style="font-size:13px">${esc(a.asked)}</div>
-    <div class="mono ${a.ok ? "accent" : "fail"}" style="font-size:13px">${a.ok ? "passing" : "failing"}</div>
+    <div class="muted t-small">${esc(a.asked)}</div>
+    <div class="mono ${a.ok ? "accent" : "fail"}">${a.ok ? "passing" : "failing"}</div>
   </div>`).join("\n")}
 
-  <h2 style="font-size:18px;margin:40px 0 8px">Measured</h2>
+  <h2 class="t-lede" style="margin:40px 0 8px">Measured</h2>
   <table class="receipt" style="max-width:520px">
     <tr><td>previewUrl resolve, p50</td><td>${s.resolveP50Ms === null ? "no data" : `${s.resolveP50Ms} ms`}</td></tr>
     <tr><td>previewUrl resolve, p95</td><td>${s.resolveP95Ms === null ? "no data" : `${s.resolveP95Ms} ms`}</td></tr>
     <tr><td>soaked, total</td><td>${s.soak.distinctHours} h across ${s.soak.runs} runs</td></tr>
     <tr><td>longest uninterrupted</td><td>${s.soak.continuousHours} h</td></tr>
   </table>
-  <p class="muted" style="font-size:12px;max-width:62ch">
+  <p class="muted t-small" style="max-width:62ch">
     Total hours and longest uninterrupted stretch are different numbers and are never
     added together. A laptop that sleeps cannot produce a continuous day, so that is
     not claimed.
@@ -88,7 +88,7 @@ export function renderOffline(s: OfflineSnapshot): string {
 
   ${s.repoUrl ? `<p style="margin-top:40px"><a href="${esc(s.repoUrl)}">The code, the measurements and the write-up</a>, including every failure found along the way.</p>` : ""}
 
-  <p class="muted" style="font-size:12px;margin-top:40px">
+  <p class="muted t-small" style="margin-top:40px">
     This page is served by Cloudflare from a cache. Reload in a while and the real site
     may be back.
   </p>
