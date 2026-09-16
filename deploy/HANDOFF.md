@@ -155,3 +155,50 @@ noise in the measurement.
 The gate is **24 continuous hours**, not 24 hours accumulated. The report prints
 both numbers and never merges them. This host run is the first that can produce
 the continuous one, which is the whole reason for moving it off the laptop.
+
+## Reaching the host: Systems Manager, not an open port
+
+Port 22 is closed to the internet. `ssh` and `scp` still work, and `deploy.sh`
+is unchanged, because the SSH session is tunnelled over AWS Systems Manager
+rather than sent at a public port.
+
+```sh
+sh deploy/deploy.sh blink blink.utkarshbahuguna.me
+```
+
+`blink` is an entry in `~/.ssh/config`, not a hostname:
+
+```
+Host blink
+  HostName i-084075d3650eb1c1b
+  User ubuntu
+  IdentityFile ~/.ssh/blink.pem
+  ProxyCommand sh -c "aws ssm start-session --target %h \
+    --document-name AWS-StartSSHSession --parameters portNumber=%p --region us-west-2"
+```
+
+### Why
+
+The security group pinned port 22 to a single home IP. The ISP rotated it, and
+the box became unreachable while the site carried on serving perfectly: nothing
+was broken except the ability to fix anything. Widening the range trades away
+the protection that made pinning worth doing, so the port is gone instead.
+
+Nothing inbound is open now except 80 and 443. There is no SSH port to scan, no
+address to keep current, and access is governed by IAM rather than by whatever
+address the ISP handed out this morning.
+
+### What it needs
+
+- An instance profile on the box carrying `AmazonSSMManagedInstanceCore`.
+- `ssm:StartSession` on the operator's IAM user.
+- `session-manager-plugin` installed locally. `~/.local/bin` is enough; it does
+  not need root.
+
+### A CLI bug worth knowing about
+
+`aws ssm send-command` fails with `badly formed help string` on aws-cli
+2.31.35, under both `--parameters` and `--cli-input-json`, and under both bash
+and zsh. `describe-instance-information` and `start-session` are fine, so it is
+that one subcommand rather than credentials or permissions. Non-interactive
+automation goes through the SSH tunnel above, which does not touch it.
