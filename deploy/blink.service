@@ -23,6 +23,14 @@ Environment=TZ=UTC
 Environment=NODE_ENV=production
 Environment=PORT=8787
 
+# Where this runs, declared rather than detected, because the health wall's job
+# is not guessing. Set here rather than by hand on the host: provision.sh copies
+# this file over /etc/systemd/system/blink.service on every deploy, so a value
+# edited on the box survives exactly until the next one. That is how the health
+# wall went back to claiming a laptop twenty minutes after it stopped being on
+# one.
+Environment=BLINK_ON_LAPTOP=0
+
 # Secrets come from a file mode 600 owned by blink, never from this unit, which
 # is world readable via systemctl cat.
 EnvironmentFile=/etc/blink/blink.env
