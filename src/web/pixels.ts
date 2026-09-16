@@ -851,13 +851,52 @@ export const PIXELS_SCRIPT = `
     aimed = box ? aimAt(box, mx, my) : null;
   }
 
+  /*
+   * Scroll work runs AT MOST ONCE PER RENDERED FRAME.
+   *
+   * What it runs is expensive in the way that is easy to miss: reaim() calls
+   * nearestHeading(), which calls textBox() on every h1 and h2 on the page, and
+   * textBox walks the text nodes with a TreeWalker and measures each one with
+   * Range.getBoundingClientRect. Every one of those forces a synchronous layout.
+   *
+   * Scroll events fire faster than frames, so one flick ran that whole sweep
+   * several times inside a single frame, and none of the extra runs could change
+   * what was drawn. Measured on the live page: 60 fps sitting still, 37 fps while
+   * scrolling, median frame 33.3 ms, which is exactly two vsync intervals. Not
+   * slightly over budget. Missing every other frame.
+   *
+   * Deferring the whole handler to a rAF was the obvious fix and the wrong one:
+   * it makes the response land a frame late, and the shape swap below is
+   * specifically written to happen in the same frame as the scroll, with a test
+   * that says so. Gating on the frame counter keeps the work synchronous and
+   * first-wins, so the response is unchanged and the repeats are gone.
+   *
+   * The running half of the test matters: when the field is cold the loop stops
+   * and the frame counter stops advancing, so a counter test on its own would
+   * match forever and the field would never answer a scroll again.
+   */
+  var scrolledOnFrame = -1;
   addEventListener("scroll", function () {
+    lastMove = performance.now();
+    if (running && scrolledOnFrame === t) return;
+    scrolledOnFrame = t;
+
     // Scrolling is activity: it cancels Pac-Man and a held shape the same way
     // moving the cursor does, and it re-checks what the cursor is now next to.
     var hadShape = !!(aimed || held);
-    lastMove = performance.now();
     pacOn = false;
     held = null;
+    /*
+     * Re-measure the ambient bands HERE rather than only every AMB_EVERY frames.
+     *
+     * The bands are stored in viewport coordinates and the canvas is fixed, so
+     * every pixel of scroll invalidates them. Refreshing on a frame counter meant
+     * that during a scroll the cloud was drawn from a position up to fifteen
+     * frames old: it lagged the hero it belongs to and spilled past the section
+     * it is supposed to stop at, which is the glitch and the overflow. It is two
+     * getBoundingClientRect calls, inside work already being paid for.
+     */
+    measureAmbient();
     reaim();
     /*
      * When a shape stops being a shape, replace it rather than letting it fade.
