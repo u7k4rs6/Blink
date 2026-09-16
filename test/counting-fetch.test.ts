@@ -120,3 +120,76 @@ test("the adapter turns a 429 into a GuardBug carrying the slot state", async ()
   }
   assert.equal(fake.calls.length, 1);
 });
+
+test("the cap message leads with the upstream failure, not with the cap", async () => {
+  /*
+   * Solari answered a real outage with a clean, self describing body:
+   *
+   *   503 {"code":"NoCapacity","error":"No sandbox host available","retryable":true}
+   *
+   * and the public health wall reported "retry cap exceeded for call class
+   * create". An upstream outage read as a fault in Blink, on the one page whose
+   * entire job is saying what actually happened.
+   *
+   * The upstream response had been captured the whole time, in scope.lastFailure,
+   * under a comment saying it was kept "so the adapter can rethrow it rather than
+   * the synthetic cap response". Nothing read it. A field populated correctly,
+   * commented correctly, with no consumer: the same shape as a control that
+   * passes its own test and cannot fire.
+   */
+  const noCapacity = {
+    status: 503,
+    body: { code: "NoCapacity", error: "No sandbox host available", retryable: true },
+  };
+  // Two identical failures: the SDK retries the first, and the second trips the cap.
+  const { fake, counting, client, restore } = harness(CAPS_GATES, [noCapacity, noCapacity, noCapacity]);
+  try {
+    let message = "";
+    try {
+      await counting.call("canary:gitea:create", "create", () =>
+        client.create({ fromSnapshot: "snap_test", cpu: 1, memMb: 2048 }));
+    } catch (e) {
+      message = String((e as Error).message);
+    }
+
+    assert.ok(message, "the call must fail");
+    // The cause, first.
+    assert.match(message, /503/, "the upstream status has to survive to the message");
+    assert.match(message, /NoCapacity/, "and so does the code that names it");
+    assert.match(message, /No sandbox host available/, "and the sentence that explains it");
+    assert.match(message, /retryable/, "and whether it is worth trying again");
+    assert.ok(
+      message.indexOf("NoCapacity") < message.indexOf("cap allows"),
+      "the upstream cause must come BEFORE the cap, because the cap is only the mechanism that noticed",
+    );
+    // The cap is still reported: it explains why there were not more attempts.
+    assert.match(message, /cap allows/);
+    assert.ok(fake.calls.length >= 1, "at least one real attempt reached the fake");
+  } finally {
+    restore();
+  }
+});
+
+test("a transport failure with no upstream response says so rather than inventing a status", async () => {
+  // lastFailure is null when the attempt never produced a response at all. The
+  // message must not imply a status that was never received.
+  const { counting, restore } = harness(CAPS_GATES, []);
+  try {
+    let message = "";
+    try {
+      await counting.call("probe", "create", async () => {
+        // Two failed attempts with no Response object, then the cap.
+        for (let i = 0; i < 3; i++) {
+          try { await counting.fetch("https://api.getsolari.test/sandboxes", { method: "POST" }); }
+          catch { /* the fake script is empty, so this throws */ }
+        }
+        throw new Error("exhausted");
+      });
+    } catch (e) {
+      message = String((e as Error).message);
+    }
+    assert.ok(!/HTTP \d/.test(message), `no status may be invented: ${message}`);
+  } finally {
+    restore();
+  }
+});

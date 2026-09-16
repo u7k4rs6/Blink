@@ -110,6 +110,24 @@ function pathOf(input: FetchInput): string {
   }
 }
 
+/**
+ * The interesting half of an upstream error body, if it has one.
+ *
+ * Solari answers failures as `{ code, error, retryable }`, so a caller that
+ * prints only the status throws away the sentence that says what to do about
+ * it. Anything unrecognised is left out rather than guessed at: a status alone
+ * is honest, and a mangled body is not.
+ */
+function describeFailure(body: unknown): string {
+  if (typeof body !== "object" || body === null) return "";
+  const b = body as { code?: unknown; error?: unknown; retryable?: unknown };
+  const code = typeof b.code === "string" ? b.code : "";
+  const msg = typeof b.error === "string" ? b.error : "";
+  if (!code && !msg) return "";
+  const retry = b.retryable === true ? ", retryable" : b.retryable === false ? ", not retryable" : "";
+  return ` ${[code, msg].filter(Boolean).join(": ")}${retry}`;
+}
+
 export function createCountingFetch(opts: CountingFetchOptions): CountingFetch {
   const log: Attempt[] = [];
 
@@ -126,11 +144,32 @@ export function createCountingFetch(opts: CountingFetchOptions): CountingFetch {
     if (scope && priorAttempts > cap) {
       // The SDK is trying to retry past our cap. Hard stop with a status the SDK
       // will not retry, carrying a code the adapter unwraps.
+      //
+      // LEAD WITH THE UPSTREAM FAILURE, because that is the news and the cap is
+      // only the mechanism that noticed it.
+      //
+      // This message used to describe the cap alone. `scope.lastFailure` was
+      // recorded a few lines below, with a comment saying it was kept "so the
+      // adapter can rethrow it rather than the synthetic cap response", and
+      // nothing ever read it: a field populated correctly, commented correctly,
+      // with no consumer anywhere in the codebase.
+      //
+      // The cost was not theoretical. Solari returned a clean, self describing
+      // 503 NoCapacity, and the public health wall reported "retry cap exceeded
+      // for call class create", so an upstream outage read as a fault in Blink
+      // on the one page whose entire job is saying what actually happened.
+      const up = scope.lastFailure;
+      const upstream = up === null
+        ? "the SDK retried without any upstream response being recorded, so the " +
+          "failure was a transport error rather than a status"
+        : `upstream returned HTTP ${up.status}${describeFailure(up.body)}`;
       const synthetic = {
         code: BLINK_RETRY_CAP,
         error:
-          `retry cap exceeded for call class "${cls}": ${priorAttempts} attempt(s) already made, ` +
-          `cap allows ${cap} retr${cap === 1 ? "y" : "ies"}. There is no retry loop in this codebase.`,
+          `${upstream}. The SDK then tried to retry past this codebase's cap for call ` +
+          `class "${cls}": ${priorAttempts} attempt(s) already made, cap allows ${cap} ` +
+          `retr${cap === 1 ? "y" : "ies"}, so the call was stopped here rather than ` +
+          `retried. There is no retry loop in this codebase.`,
         retryable: false,
       };
       scope.attempts.push({
