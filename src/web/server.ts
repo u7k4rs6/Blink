@@ -450,7 +450,7 @@ const server = createServer(async (req, res) => {
   }
 
   /**
-   * The snapshot the Cloudflare Worker caches and serves when this laptop is
+   * The snapshot the Cloudflare Worker caches and serves when this origin is
    * unreachable. Deliberately small and JSON: the Worker holds the markup, and
    * this only supplies the numbers, so the offline page can be restyled without
    * a redeploy of the site.
@@ -544,9 +544,9 @@ const server = createServer(async (req, res) => {
     });
     return send(200, renderHealthWall(rows, soakSummary(ticks),
       billing ? { isDurable: billing.isDurable, describe: billing.describe } : undefined,
-      // Declared, not detected. A laptop deployment is a fact about the operator
-      // and guessing it from the environment would be a guess on the one page
-      // whose whole purpose is not guessing.
+      // Declared, not detected. Where this runs is a fact about the operator and
+      // guessing it from the environment would be a guess on the one page whose
+      // whole purpose is not guessing. Set BLINK_ON_LAPTOP=0 on a server.
       { onLaptop: process.env.BLINK_ON_LAPTOP !== "0" }));
   }
 

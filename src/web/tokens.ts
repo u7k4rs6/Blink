@@ -140,7 +140,7 @@ export const REGISTER = {
  * The reference uses Sneak, which is licensed and cannot ship here. Space
  * Grotesk is the closest free grotesque with the same tight apertures and a
  * usable 700, which the headings need. Loaded with font-display: swap and a
- * stack that stands up on its own, because this site is served from a laptop
+ * stack that stands up on its own, because this site is served from one small box
  * and a blocking web font is the wrong thing to make a visitor wait for.
  */
 export const FONT_TEXT =

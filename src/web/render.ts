@@ -446,7 +446,7 @@ ${renderBoard(board, canaryHistory)}
 </main>
 <footer class="foot" data-ambient="up" data-ambient-below="span" data-reveal-on-scroll>
   <span><a href="/health">Health wall</a> &middot; every check names what it asked</span>
-  <span>runs from a laptop &middot; up while it is on</span>
+  <span>one small box in us-west-2 &middot; no failover</span>
 </footer>
 ${turnstileSiteKey ? `<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>` : ""}
 <script>
@@ -653,11 +653,15 @@ export function renderHealthWall(rows: Array<{
   Each row says what its canary actually asked. A status code would show green for an app
   serving its own installer, which is not a hypothetical: it happened twice while building this.
 </p>
-${hosting?.onLaptop ? `<p class="warn t-small" style="max-width:70ch">
-  <strong>This site runs from a laptop.</strong> It is up while that machine is awake, unlocked
-  and connected, and down when the lid closes or it sleeps. There is no second server and no
-  failover. Every measurement on this page is real; the uptime is not a service.
-</p>` : ""}
+${hosting === undefined ? "" : `<p class="warn t-small" style="max-width:70ch">
+  ${hosting.onLaptop
+    ? `<strong>This site runs from a laptop.</strong> It is up while that machine is awake, unlocked
+       and connected, and down when the lid closes or it sleeps.`
+    : `<strong>This site runs on one small server.</strong> A single instance with no second machine,
+       no second region and nothing in front of it that can serve the app if it stops.`}
+  There is no second server and no failover.
+  Every measurement on this page is real; the uptime is not a service.
+</p>`}
 <p class="mono">
   ${soak.continuousHours >= 24
     ? `Soaked continuously for ${soak.continuousHours} hours on the host that serves this page.`

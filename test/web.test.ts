@@ -345,11 +345,22 @@ test("accumulated soak hours are never presented as continuous, even on a laptop
   assert.ok(!/Soaked continuously for 23/.test(html));
 });
 
-test("the laptop notice is omitted when the site is not on a laptop", async () => {
+test("a server says it is one server, rather than saying nothing", async () => {
+  /*
+   * Moving to a host used to mean the notice vanished entirely, because the
+   * whole block was written behind the laptop flag. That is the wrong lesson to
+   * draw from leaving a laptop: a single instance with no second machine and no
+   * failover is still a single point of failure, and the visitor is owed that
+   * either way. What changes between the two is the sentence, not whether there
+   * is one.
+   */
   const { renderHealthWall } = await import("../src/web/render.ts");
   const html = renderHealthWall([], { continuousHours: 24, distinctHours: 24, runs: 1 },
     undefined, { onLaptop: false });
-  assert.ok(!/runs from a laptop/i.test(html));
+  assert.ok(!/runs from a laptop/i.test(html), "it is not a laptop any more");
+  assert.match(html, /runs on one small server/i, "but it still has to say what it is");
+  assert.match(html, /no second server and no\s+failover/i);
+  assert.match(html, /the uptime is not a service/i);
   assert.match(html, /continuously for 24 hours/);
 });
 

@@ -1,14 +1,14 @@
 /**
  * The offline page.
  *
- * Served by a Cloudflare Worker when the laptop is unreachable. A dead hostname
+ * Served by a Cloudflare Worker when the origin is unreachable. A dead hostname
  * is the one outcome that loses a reader outright: they arrived from a post, at
  * a time nobody controls, and a connection error tells them nothing except that
  * this does not work.
  *
  * So the page says the machine is asleep, says roughly when it is up, and still
  * shows the measurements, because the numbers are the point of the project and
- * they do not stop being true when the laptop is closed.
+ * they do not stop being true when the origin goes away.
  *
  * Same register as the health wall and the cold and warm labels: state the
  * limitation where the reader is, in the plainest available words, and do not
@@ -45,8 +45,8 @@ export function renderOffline(s: OfflineSnapshot): string {
   <h1 class="t-title" style="margin:0 0 16px">Blink is asleep right now.</h1>
 
   <p style="max-width:62ch;margin:0 0 8px">
-    Blink runs from a laptop, not a server. It is up while that machine is awake and
-    connected, and right now it is not. Nothing is broken.
+    Blink runs on a single small server with no failover, and right now that server is not
+    answering. Nothing is broken on your end.
     ${s.awakeHoursUtc ? `It is usually up around ${esc(s.awakeHoursUtc)}.` : ""}
   </p>
   <p class="muted" style="max-width:62ch;margin:0 0 40px">
@@ -82,8 +82,8 @@ export function renderOffline(s: OfflineSnapshot): string {
   </table>
   <p class="muted t-small" style="max-width:62ch">
     Total hours and longest uninterrupted stretch are different numbers and are never
-    added together. A laptop that sleeps cannot produce a continuous day, so that is
-    not claimed.
+    added together. A host that has been restarted cannot produce a continuous day, so that
+    is not claimed.
   </p>
 
   ${s.repoUrl ? `<p style="margin-top:40px"><a href="${esc(s.repoUrl)}">The code, the measurements and the write-up</a>, including every failure found along the way.</p>` : ""}

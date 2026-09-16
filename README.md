@@ -9,8 +9,9 @@ that app already running and already full of data. Yours alone for ten minutes.
 Then it destroys itself and tells you what it cost.
 
 **Live at [blink.utkarshbahuguna.me](https://blink.utkarshbahuguna.me)**, running
-from a laptop behind a Cloudflare Tunnel. Said here rather than left to be
-discovered, because it is why the site can be asleep.
+on one small AWS instance behind Cloudflare. One box, no failover, no second
+region: if it goes, the site goes. Said here rather than left to be discovered,
+because an uptime claim is worth what the thing behind it can actually survive.
 
 ## Why this exists
 
