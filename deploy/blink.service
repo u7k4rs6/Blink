@@ -31,6 +31,16 @@ Environment=PORT=8787
 # one.
 Environment=BLINK_ON_LAPTOP=0
 
+# Where canary screenshots live, stated rather than inferred.
+#
+# SHOT_DIR defaults to $HOME/.blink/shots, and this unit sets ProtectHome=true
+# and PrivateTmp=true. If HOME is ever absent the default falls back to /tmp,
+# which under PrivateTmp is a private tmpfs destroyed on every restart: the
+# screenshots would be written successfully, served correctly, and vanish on the
+# next deploy, with nothing anywhere reporting a failure. StateDirectory=blink
+# already creates and owns this path, and ReadWritePaths already allows it.
+Environment=BLINK_SHOT_DIR=/var/lib/blink/shots
+
 # Secrets come from a file mode 600 owned by blink, never from this unit, which
 # is world readable via systemctl cat.
 EnvironmentFile=/etc/blink/blink.env
