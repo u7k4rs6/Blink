@@ -72,7 +72,26 @@ const queue = new QueueManager();
  * decision somebody typed.
  */
 const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET ?? "";
+const TURNSTILE_SITE_KEY = process.env.TURNSTILE_SITE_KEY ?? "";
 const TURNSTILE_DISABLED = process.env.BLINK_TURNSTILE_DISABLED === "1";
+
+/**
+ * One answer to "is verification required", derived once, here.
+ *
+ * It used to be answered twice and separately. The server enforced on whether
+ * TURNSTILE_SECRET was set; the browser decided on whether a widget had been
+ * rendered, which depended on TURNSTILE_SITE_KEY. Deploying with the secret and
+ * not the site key put the two on opposite sides: no widget, so the client sent
+ * every launch without a token and never gated a button, and the server refused
+ * every one of them as missing_token. The page said "Bot verification is
+ * disabled" while enforcing it, and the refusal read as "Could not verify you
+ * are a person", which blames the visitor for a variable nobody set.
+ *
+ * Two sources for one fact is the defect. A half configured Turnstile is now a
+ * state the site refuses to serve launches in, and says so in its own terms.
+ */
+const TURNSTILE_HALF_CONFIGURED =
+  !TURNSTILE_DISABLED && (TURNSTILE_SECRET === "") !== (TURNSTILE_SITE_KEY === "");
 
 /**
  * Public launches off, everything else on.
@@ -86,6 +105,17 @@ const TURNSTILE_DISABLED = process.env.BLINK_TURNSTILE_DISABLED === "1";
  * is a decoration: the endpoint is what has to say no.
  */
 const LAUNCHES_DISABLED = process.env.BLINK_LAUNCHES_DISABLED === "1";
+
+/**
+ * Why launches are off, when the reason is a broken Turnstile rather than a
+ * decision. Said in the visitor's terms: they did nothing wrong and retrying
+ * will not help.
+ */
+const TURNSTILE_OFF_REASON = TURNSTILE_HALF_CONFIGURED
+  ? "Bot verification is only half configured on this deployment, so a launch could " +
+    "never succeed. This is an operator mistake, not something you did, and reloading " +
+    "will not change it. Everything else on this page is live."
+  : undefined;
 const LAUNCHES_OFF_REASON =
   "Launches are paused while the operator confirms with Solari that public, " +
   "anonymous instances are permitted on this account. The catalog, the health " +
@@ -445,8 +475,8 @@ const server = createServer(async (req, res) => {
       ...Array<null>(Math.max(0, FIELD_CELLS - recent.length)).fill(null),
       ...recent.map((c) => c.ok),
     ];
-    return send(200, renderCatalog(board, apps, process.env.TURNSTILE_SITE_KEY, canaryHistory,
-      LAUNCHES_DISABLED ? LAUNCHES_OFF_REASON : undefined));
+    return send(200, renderCatalog(board, apps, TURNSTILE_SITE_KEY || undefined, canaryHistory,
+      LAUNCHES_DISABLED ? LAUNCHES_OFF_REASON : TURNSTILE_OFF_REASON));
   }
 
   /**
@@ -567,6 +597,7 @@ const server = createServer(async (req, res) => {
 
   if (url.pathname.startsWith("/launch/") && req.method === "POST") {
     if (LAUNCHES_DISABLED) return send(503, `<p class="warn">${esc(LAUNCHES_OFF_REASON)}</p>`);
+    if (TURNSTILE_OFF_REASON) return send(503, `<p class="warn">${esc(TURNSTILE_OFF_REASON)}</p>`);
     const appId = decodeURIComponent(url.pathname.slice("/launch/".length));
     const app = APPS[appId];
     const snapshotId = loadRegistry()[appId];
@@ -731,6 +762,7 @@ const server = createServer(async (req, res) => {
 
   if (url.pathname.startsWith("/launch-share/") && req.method === "POST") {
     if (LAUNCHES_DISABLED) return send(503, `<p class="warn">${esc(LAUNCHES_OFF_REASON)}</p>`);
+    if (TURNSTILE_OFF_REASON) return send(503, `<p class="warn">${esc(TURNSTILE_OFF_REASON)}</p>`);
     const token = decodeURIComponent(url.pathname.slice("/launch-share/".length));
     if (!runner) return send(200, `<p class="fail">Launching is off: this server has no Solari key.</p>`);
     return void resolveShare(shares, token).then(async (r) => {

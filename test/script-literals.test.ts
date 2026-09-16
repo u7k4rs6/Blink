@@ -68,3 +68,40 @@ test("the script templates substitute every placeholder they contain", () => {
       `${name}.ts has a quoted placeholder that renders as text rather than substituting`);
   }
 });
+
+// ---------------------------------------------------------------------------
+// Configuration that has to agree with itself
+// ---------------------------------------------------------------------------
+
+test("a half configured Turnstile refuses launches instead of blaming the visitor", () => {
+  /*
+   * The deployment carried TURNSTILE_SECRET and not TURNSTILE_SITE_KEY, because
+   * blink.env.example listed only the secret. The consequences all pointed the
+   * wrong way:
+   *
+   *   no site key  -> no widget on the page
+   *   no widget    -> the client decides verification is not required, gates no
+   *                   button, and sends every launch with no token
+   *   secret set   -> the server verifies, and refuses every one of them
+   *
+   * So the page said "Bot verification is disabled" while enforcing it, and the
+   * refusal read "Could not verify you are a person", which blames a visitor for
+   * a variable nobody set. Two sources for one fact is the defect: the server
+   * answered from the secret, the browser answered from the rendered DOM.
+   */
+  const src = readFileSync(new URL("../src/web/server.ts", import.meta.url), "utf8");
+
+  assert.match(src, /TURNSTILE_HALF_CONFIGURED/,
+    "the disagreement has to be a named state, not something each side infers");
+  assert.match(src, /\(TURNSTILE_SECRET === ""\) !== \(TURNSTILE_SITE_KEY === ""\)/,
+    "exactly one of the pair being set is the condition");
+  assert.match(src, /TURNSTILE_OFF_REASON/,
+    "and it has to reach the catalog, so the buttons go off rather than failing");
+
+  // The example file is where this started: it is what a deployment is copied
+  // from, so a variable missing there is a variable missing in production.
+  const example = readFileSync(new URL("../deploy/blink.env.example", import.meta.url), "utf8");
+  for (const v of ["SOLARI_API_KEY", "DATABASE_URL", "TURNSTILE_SECRET", "TURNSTILE_SITE_KEY"]) {
+    assert.match(example, new RegExp(`^${v}=`, "m"), `${v} is missing from blink.env.example`);
+  }
+});
