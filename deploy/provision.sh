@@ -14,7 +14,25 @@
 
 set -eu
 
-NODE_VERSION="${NODE_VERSION:-v22.23.2}"
+# Node 24, because the repository runs with no build step and relies on native
+# type stripping. package.json says >=23.6 and .nvmrc says 24; this file said
+# v22.23.2, which predates both and would have installed a runtime that cannot
+# execute src/.
+NODE_VERSION="${NODE_VERSION:-v24.15.0}"
+
+# The architecture, detected rather than assumed.
+#
+# This used to hardcode linux-x64. On Graviton, which is the cheap instance and
+# therefore the one you actually want, that downloads an x86 tarball, unpacks it
+# happily, and fails at the first `node --version` with an exec format error.
+# The build is chosen by the machine it is being installed on, not by the
+# machine this file was written on.
+case "$(uname -m)" in
+  x86_64)          NODE_ARCH=x64 ;;
+  aarch64 | arm64) NODE_ARCH=arm64 ;;
+  *) echo "unsupported architecture: $(uname -m)" >&2; exit 1 ;;
+esac
+
 APP_DIR=/opt/blink
 STATE_DIR=/var/lib/blink
 
@@ -27,7 +45,7 @@ chown -R blink:blink "$STATE_DIR"
 
 say "node ${NODE_VERSION}"
 if ! /usr/bin/node --version 2>/dev/null | grep -q "${NODE_VERSION}"; then
-  TARBALL="node-${NODE_VERSION}-linux-x64.tar.xz"
+  TARBALL="node-${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz"
   cd /tmp
   curl -fsSL -O "https://nodejs.org/dist/${NODE_VERSION}/${TARBALL}"
   curl -fsSL "https://nodejs.org/dist/${NODE_VERSION}/SHASUMS256.txt" -o SHASUMS256.txt
@@ -35,8 +53,8 @@ if ! /usr/bin/node --version 2>/dev/null | grep -q "${NODE_VERSION}"; then
   # on the ones that are absent.
   grep " ${TARBALL}$" SHASUMS256.txt | sha256sum -c -
   tar xf "${TARBALL}" -C /opt
-  ln -sf "/opt/node-${NODE_VERSION}-linux-x64/bin/node" /usr/bin/node
-  ln -sf "/opt/node-${NODE_VERSION}-linux-x64/bin/npm" /usr/bin/npm
+  ln -sf "/opt/node-${NODE_VERSION}-linux-${NODE_ARCH}/bin/node" /usr/bin/node
+  ln -sf "/opt/node-${NODE_VERSION}-linux-${NODE_ARCH}/bin/npm" /usr/bin/npm
   rm -f "${TARBALL}" SHASUMS256.txt
 fi
 /usr/bin/node --version
