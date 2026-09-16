@@ -17,6 +17,17 @@ HOST="${1:?usage: deploy.sh user@host [domain]}"
 DOMAIN="${2:-}"
 TARBALL=/tmp/blink-deploy.tar.gz
 
+# Elevate only if we are not already root.
+#
+# This script was written for `root@host`, which is a login the images people
+# actually boot do not have: Ubuntu and Debian cloud images, and every EC2 AMI,
+# ship with root SSH disabled and an unprivileged user with sudo. Hardcoding
+# root meant the choice was between editing this file on the day or enabling
+# root SSH on a public box, and one of those is much worse than the other.
+# Detected once, up front, rather than assumed per command.
+REMOTE_SUDO=$(ssh "$HOST" 'if [ "$(id -u)" -eq 0 ]; then echo ""; else echo sudo; fi')
+[ -n "$REMOTE_SUDO" ] && echo "[deploy] elevating with sudo on the host"
+
 echo "[deploy] packaging"
 # Deliberately excludes .env, node_modules, and every local run artefact. The
 # host installs its own dependencies and keeps its own state.
@@ -28,28 +39,28 @@ tar czf "$TARBALL" \
 
 echo "[deploy] copying to $HOST"
 scp -q "$TARBALL" "$HOST:/tmp/blink.tar.gz"
-ssh "$HOST" 'mkdir -p /opt/blink && tar xzf /tmp/blink.tar.gz -C /opt/blink'
+ssh "$HOST" "$REMOTE_SUDO mkdir -p /opt/blink && $REMOTE_SUDO tar xzf /tmp/blink.tar.gz -C /opt/blink"
 
 echo "[deploy] provisioning"
-ssh "$HOST" 'sh /opt/blink/deploy/provision.sh'
+ssh "$HOST" "$REMOTE_SUDO sh /opt/blink/deploy/provision.sh"
 
 if [ -n "$DOMAIN" ]; then
   echo "[deploy] caddy for $DOMAIN"
-  ssh "$HOST" "command -v caddy >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq debian-keyring debian-archive-keyring apt-transport-https curl && \
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && \
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list && \
-    apt-get update -qq && apt-get install -y -qq caddy)"
-  ssh "$HOST" "sed 's/blink.example/${DOMAIN}/' /opt/blink/deploy/Caddyfile > /etc/caddy/Caddyfile && systemctl reload caddy || systemctl restart caddy"
+  ssh "$HOST" "command -v caddy >/dev/null 2>&1 || ($REMOTE_SUDO apt-get update -qq && apt-get install -y -qq debian-keyring debian-archive-keyring apt-transport-https curl && \
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor | $REMOTE_SUDO tee /usr/share/keyrings/caddy-stable-archive-keyring.gpg >/dev/null && \
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | $REMOTE_SUDO tee /etc/apt/sources.list.d/caddy-stable.list >/dev/null && \
+    $REMOTE_SUDO apt-get update -qq && $REMOTE_SUDO apt-get install -y -qq caddy)"
+  ssh "$HOST" "sed 's/blink.example/${DOMAIN}/' /opt/blink/deploy/Caddyfile | $REMOTE_SUDO tee /etc/caddy/Caddyfile >/dev/null && $REMOTE_SUDO systemctl reload caddy || $REMOTE_SUDO systemctl restart caddy"
 fi
 
 echo "[deploy] restarting blink"
 # The unit sends SIGTERM and waits 45 s. The server settles every live instance,
 # writes their receipts and drains the warm pool before exiting, so a deploy in
 # the middle of the day does not leak sandboxes.
-ssh "$HOST" 'systemctl restart blink && sleep 3 && systemctl is-active blink'
+ssh "$HOST" "$REMOTE_SUDO systemctl restart blink && sleep 3 && $REMOTE_SUDO systemctl is-active blink"
 
 echo "[deploy] recent log"
-ssh "$HOST" 'journalctl -u blink -n 20 --no-pager'
+ssh "$HOST" "$REMOTE_SUDO journalctl -u blink -n 20 --no-pager"
 
 rm -f "$TARBALL"
 cat <<'DONE'

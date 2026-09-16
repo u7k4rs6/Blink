@@ -55,8 +55,24 @@ ProtectControlGroups=true
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictNamespaces=true
 LockPersonality=true
-MemoryDenyWriteExecute=true
 SystemCallArchitectures=native
+
+# MemoryDenyWriteExecute is NOT set, and that is deliberate.
+#
+# It was set here, and it makes this unit unstartable. V8 is a JIT: it maps a
+# region, writes machine code into it, then marks it executable, which is
+# exactly the transition the directive forbids. Node dies inside
+# Isolate::Initialize before any of this repository's code runs, with
+#
+#   # Fatal error in , line 0
+#   # Check failed: 12 == (*__errno_location ()).
+#   ... v8::base::OS::SetPermissions ...
+#
+# and systemd reports it as a core dump, which reads like a crash in the
+# application rather than a policy refusal in the sandbox. Nothing else in this
+# unit is relaxed to accommodate it: the process still has no new privileges, a
+# private tmp, a read-only system with one writable state directory, no home, no
+# kernel tunables, three address families and a locked personality.
 
 [Install]
 WantedBy=multi-user.target
