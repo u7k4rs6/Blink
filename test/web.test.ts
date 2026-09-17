@@ -412,6 +412,33 @@ test("the widget explains why it exists, in the visitor's terms", () => {
   assert.match(html, /real machine/);
 });
 
+test("a screenshot older than today carries its date", async () => {
+  /*
+   * The card printed the time alone. That is right for a picture taken minutes
+   * ago and a lie for one taken last week: "canary screenshot 06:19 UTC" reads
+   * as this morning whatever day it came from.
+   *
+   * It matters most exactly when the platform is down, which is when the old
+   * screenshots are the only ones there are. A real picture of a real instance
+   * is still the best evidence this page has, and it stays up during an outage,
+   * but a picture that cannot say how old it is stops being evidence.
+   */
+  const { shotStamp } = await import("../src/web/render.ts");
+  const now = Date.now();
+
+  assert.match(shotStamp(now), /^\d{2}:\d{2} UTC$/,
+    "a picture taken today needs no date, and the card has little room");
+  const old = shotStamp(now - 6 * 86_400_000);
+  assert.match(old, /^\d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC$/,
+    `older than today must name the day, got ${old}`);
+
+  // The boundary is the UTC day, not a duration: one minute before midnight and
+  // one minute after are different days and must read differently.
+  const midnight = Date.UTC(2026, 0, 2, 0, 0, 0);
+  assert.match(shotStamp(midnight - 60_000), /^2026-01-01 /,
+    "the last minute of yesterday is dated");
+});
+
 test("a card with no canary run says so rather than borrowing a soak verdict", async () => {
   // Jaeger's card said "Down since 07:29" from a soak the previous day,
   // describing a failure since fixed, with no path to clearing: the run that

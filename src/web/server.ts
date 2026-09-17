@@ -25,7 +25,7 @@ import { SolariAdapter } from "../solari/adapter.ts";
 import { waitHealthyInGuest } from "../../scripts/gates/lib/health.ts";
 
 import { safeOut, safeErr } from "../safe-io.ts";
-import { at, renderCatalog, renderHealthWall, renderLaunchPanel, renderReceipt, renderToolbar, renderInstanceEnded, renderSharePage, shell, esc, type App, type Board } from "./render.ts";
+import { at, renderCatalog, renderHealthWall, renderLaunchPanel, renderReceipt, renderToolbar, renderInstanceEnded, renderSharePage, shell, esc, shotStamp, type App, type Board } from "./render.ts";
 import { createShare, resolveShare, MemoryShareStore, ShareRefused } from "../share/service.ts";
 import { sweepExpiredShares } from "../share/expiry.ts";
 import { QueueManager } from "../queue/manager.ts";
@@ -378,9 +378,7 @@ function buildApps(ticks: Tick[]): App[] {
       // exists, so a card shows an empty frame rather than a stock image.
       credentials: credentialsFor(id),
       shotUrl: existsSync(shotPathFor(id)) ? `/shots/${id}.png` : null,
-      shotAt: existsSync(shotPathFor(id))
-        ? `${new Date(statSync(shotPathFor(id)).mtimeMs).toISOString().slice(11, 16)} UTC`
-        : null,
+      shotAt: existsSync(shotPathFor(id)) ? shotStamp(statSync(shotPathFor(id)).mtimeMs) : null,
     });
   }
   return out;

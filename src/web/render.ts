@@ -29,6 +29,27 @@ export function at(base: string, path?: string): string {
   return out.toString();
 }
 
+/**
+ * When a screenshot was taken, with the date whenever that is not today.
+ *
+ * It printed the time alone, which is fine for a picture minutes old and a lie
+ * for one taken last week: "canary screenshot 06:19 UTC" reads as this morning
+ * whatever day it is from. The cards keep their screenshots through an outage,
+ * because a real picture of a real instance is still the best evidence the page
+ * has, but a picture that cannot say how old it is stops being evidence and
+ * starts being decoration.
+ *
+ * Same UTC day gets the short form, since that is the common case and the card
+ * has little room. Anything older carries its date and has to.
+ */
+export function shotStamp(mtimeMs: number): string {
+  const iso = new Date(mtimeMs).toISOString();
+  const today = new Date().toISOString().slice(0, 10);
+  return iso.slice(0, 10) === today
+    ? `${iso.slice(11, 16)} UTC`
+    : `${iso.slice(0, 10)} ${iso.slice(11, 16)} UTC`;
+}
+
 /** Escape everything that reaches HTML. There is no exception to this. */
 export function esc(s: unknown): string {
   return String(s)
